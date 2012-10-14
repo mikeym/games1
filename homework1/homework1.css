@@ -1,0 +1,126 @@
+/* 
+  Gameplay assignment 1, 10/6/2012, Michael Micheletti 
+  Color palette: http://www.colourlovers.com/palette/126030/Cruel_Water_at_Night
+*/
+
+/* plain gray body with plain sauce */
+body {
+  background-color: rgb(169,176,179);
+  color: rgb(169,176,179);
+  padding: 25px 5px;
+  font: 16px "Courier New", Courier, monospace;
+}
+
+/* header above form, butts right next to it */
+header {
+  width: 300px;
+  height: 100px;
+  margin: 0 auto;
+  padding: 10px 10px 0 10px;
+  background-color: rgb(64,71,73);
+  line-height: 1.1em;
+  letter-spacing: 1px;
+  border-top: 1px solid rgba(3,12,34,0.3);
+  border-right: 1px solid rgba(3,12,34,0.3);
+  border-bottom: 0;
+  border-left: 1px solid rgba(3,12,34,0.3);
+  -webkit-border-radius: 15px 15px 0px 0px;
+  border-radius: 15px 15px 0px 0px;
+}
+
+/* title */
+header h1 {
+  font-size: 1.25em;
+  font-style: normal;
+  margin: 0;
+  padding: 10px 10px 5px 10px;
+}
+
+/* name, date, link */
+header h2 {
+  font-size: 1em;
+  font-style: normal;
+  margin: 0;
+  padding: 5px 10px 0 10px;
+}
+
+/* email link normal treatment */
+header a {
+  color: rgb(169,176,179);
+  text-decoration: none;
+  border-bottom: 0.5px solid rgba(169,176,179,0.5);
+}
+
+/* email link hover etc */
+header a:hover,
+header a:active,
+header a:focus {
+  color: rgb(214,223,227);
+  text-decoration: none;
+  border-bottom: 0.5px solid rgba(214,223,227,0.5);
+}
+
+/* form, butts right against header */
+form {
+  width: 300px;
+  margin: 0 auto;
+  padding: 0 10px 10px 10px;
+  background-color: rgb(64,71,73);
+  border-top: 0;
+  border-right: 1px solid rgba(3,12,34,0.3);
+  border-bottom: 1px solid rgba(3,12,34,0.3);
+  border-left: 1px solid rgba(3,12,34,0.3);
+  -webkit-border-radius: 0px 0px 15px 15px;
+  border-radius: 0px 0px 15px 15px;
+}
+
+/* dark blue message area */
+#message {
+  width: 270px;
+  height: 70px;
+  padding: 10px;
+  margin-left: 5px;
+  color: rgb(169,176,179);
+  background-color: rgb(32,41,63);  
+  border: 1px solid rgba(3,12,34,0.3);
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+}
+
+/* larger number */
+#message span:first-child {
+  display: inline-block;
+  position: relative;
+  top: -15px;
+  left: 15px;
+  font-size: 6em;
+}
+
+/* smaller text */
+#message span:last-child {
+  display: inline-block;
+  position: relative;
+  top: -15px;
+  left: 25px;
+  font-size: 5em;
+}
+
+/* button container for spacing */
+#buttons {
+  padding: 20px 7px 10px 10px;
+  text-align: right;
+}
+
+/* flat gray buttons with inset text */
+button {
+  height: 70px;
+  width: 70px;
+  margin: 5px 0 5px 10px;
+  color: rgb(64,71,73);
+  background: rgb(169,176,179); /* Old browsers */
+  border: 1px solid rgba(25,28,34,1);
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  font-size: 2em;
+  text-shadow: -1px -1px 0px #191c22;
+}
