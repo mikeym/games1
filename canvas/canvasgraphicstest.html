@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Canvas Fun</title>
+<script src="canvasgraphics.js"></script>
+<style>
+  canvas { border: 1px solid #999; margin: 10px; }
+</style>
+</head>
+
+<body>
+<header>
+  <h1>Canvas Homework</h1>
+  <h2>Mikey Micheletti, HTML5 Gameplay</h2>
+</header>
+
+<div id="container">
+  <canvas id="circles" width="400" height="300">Alas for your browser.</canvas>
+  <canvas id="rects" width="400" height="300">Oh woe for your browser.</canvas>
+</div>
+
+<script>
+  // Testing circle and rounded rectangle calls
+  var graphics = new app.graphics(),
+      circleCanvas = document.getElementById("circles"),
+      circleContext = circleCanvas.getContext("2d"),
+      rectCanvas = document.getElementById("rects"),
+      rectContext = rectCanvas.getContext("2d");
+  
+  // Circles....
+    
+  // empty black stroked circle
+  circleContext.lineWidth = 6;
+  circleContext.strokeStyle = "#000000";
+  graphics.setContext(circleContext);
+  graphics.strokeCircle(17, 14, 26);
+  
+  // empty blue stroked circle
+  circleContext.lineWidth = 3;
+  circleContext.strokeStyle = "#000099";
+  graphics.setContext(circleContext);
+  graphics.strokeCircle(306, 100, 80);
+  
+  // filled semi-transparent pink circle with no stroke
+  circleContext.fillStyle = "rgba(233,78,119, " + 0.3 + ")";
+  graphics.setContext(circleContext);
+  graphics.fillCircle(207,188,99);
+  
+  // circle with semi-transparent fill and stroke
+  circleContext.fillStyle = "rgba(252,217,229, " + 0.7 + ")";
+  graphics.setContext(circleContext);
+  graphics.fillCircle(163,97,89);
+  circleContext.strokeStyle = "rgba(241,57,109, " + 0.6 + ")";
+  graphics.setContext(circleContext);
+  graphics.strokeCircle(163,97,89);
+  
+  // Rounded rectangles....
+  
+  // gray square with stroke only
+  rectContext.lineWidth = 2;
+  rectContext.strokeStyle = "#666666";
+  graphics.setContext(rectContext);
+  graphics.strokeRoundedRect(20, 20, 100, 100, 10);
+  
+  // pink filled semi-transparent rounded rect with no stroke
+  rectContext.fillStyle = "rgba(233,78,119, " + 0.3 + ")";
+  graphics.setContext(rectContext);
+  graphics.fillRoundedRect(50, 50, 77, 103, 26);
+  
+  // pink filled semi-transparent rounded rect with a blue stroke
+  rectContext.fillStyle = "rgba(252,217,229, " + 0.7 + ")";
+  graphics.setContext(rectContext);
+  graphics.fillRoundedRect(88, 83, 247,199, 79);
+  rectContext.lineWidth = 8;
+  rectContext.strokeStyle = "rgba(0,0,88, " + 0.7 + ")";
+  graphics.strokeRoundedRect(88, 83, 247,199, 79);
+  
+</script>
+</body>
+</html>

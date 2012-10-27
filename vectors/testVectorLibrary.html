@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Vector Test Suite</title>
+<!-- Mikey Micheletti, for Gameplay in HTML5 -->
+<!-- vector library -->
+<script src="vector.js"></script>
+<!-- Test functions courtesy John Resig, "Secrets of the JavaScript Ninja" -->
+<script src="asserts.js"></script>
+
+<script>
+window.onload = function() {
+  
+  // Testing test suite assert true passes
+  test("Test Assert Pass", function() {
+    pause();
+    setTimeout(function() {
+      assert(true, "A true result passes");
+      resume();
+    }, 200);
+  });
+  
+  // Testing test suite assert false fails
+  test("Test Assert Fail", function() {
+    pause();
+    setTimeout(function() {
+      assert(false, "A false result fails - demo only");
+      resume();
+    }, 200);
+  });
+  
+  // Testing simple arithmetic with valid result passes
+  test("Test addition", function() {
+    pause();
+    setTimeout(function() {
+      assert(1 + 1 === 2 ? true : false, "1 + 1 === 2");
+      resume();
+    }, 200);
+  });
+  
+  //
+  // Testing vector library functions now...
+  //
+  
+  // Testing vector object returns properties
+  test("Test Vector object creation and properties", function() {
+    pause();
+    setTimeout(function() {
+      var v1 = new app.Vector(1,2),
+          v2 = new app.Vector();
+      assert(v1.x === 1, "Vector x property retrieved");
+      assert(v1.y === 2, "Vector y property retrieved");
+      assert(v2.x === 0, "Vector default x property is zero");
+      assert(v2.y === 0, "Vector default y property is zero");
+      resume();
+    }, 200);
+  });
+  
+  // Testing isVector function
+  test("Test Vector.isVector() function", function() {
+    pause();
+    setTimeout(function() {
+      var v1 = new app.Vector(1,2),
+          v2 = new app.Vector('bird'),
+          v3 = new app.Vector();
+      assert(v1.isVector(v1) === true, "isVector detected valid vector");
+      assert(v1.isVector(v2) === false, "isVector detected invalid vector");
+      assert(v1.isVector(v3) === true, "default null vector is valid");
+      resume();
+    }, 200);
+  });
+  
+  // Testing isEqual function
+  test("Test Vector.isEqual() function", function() {
+    pause();
+    setTimeout(function() {
+      var v1 = new app.Vector(1,2),
+          v2 = new app.Vector(1,2),
+          v3 = new app.Vector(3,4);
+      assert(v1.isEqual(v2) === true, "isEqual detected two equal vectors");
+      assert(v1.isEqual(v3) === false, "isVector detected two unequal vectors");
+      resume();
+    }, 200);
+  });
+  
+    // Testing vector addition
+  test("Test Vector.add() function", function() {
+    pause();
+    setTimeout(function() {
+      var v1 = new app.Vector(1,2),
+          v2 = new app.Vector(3,4),
+          v3 = v1.add(v1,v2);
+      assert(v3.x ===  4, "x properties added correctly");
+      assert(v3.y === 6, "y properties added correctly");
+      resume();
+    }, 200);
+  });
+    
+  // Testing vector subtraction
+  test("Test Vector.subtract() function", function() {
+    pause();
+    setTimeout(function() {
+      var v1 = new app.Vector(1,2),
+          v2 = new app.Vector(3,4),
+          v3 = v1.subtract(v1,v2);
+      assert(v3.x ===  -2, "x properties subtracted correctly");
+      assert(v3.y === -2, "y properties subtracted correctly");
+      resume();
+    }, 200);
+  });
+
+  // Testing vector scalar multiply
+  test("Test Vector.scalarMul() function", function() {
+    pause();
+    setTimeout(function() {
+      var v1 = new app.Vector(1,2),
+          v2 = new app.Vector(7,14),
+          multiplier = 7;
+      assert(v1.scalarMul(v1, multiplier).isEqual(v2), "vector scalar multiplication worked correctly");
+      resume();
+    }, 200);
+  });
+
+  // Testing lengths
+  test("Test Vector.length() function", function() {
+    pause();
+    setTimeout(function() {
+      var u = new app.Vector(-1,3), // testing against homework values
+          v = new app.Vector(7,2),
+          w = new app.Vector(5,0);
+      assert(u.length() === 3.1622776601683795, "u vector length correct");
+      assert(v.length() === 7.280109889280518, "v vector length correct");
+      assert(w.length() === 5, "w vector length correct");
+    resume();
+    }, 200);
+  });
+
+  // Testing normalization
+  test("Test Vector.normalize() function", function() {
+    pause();
+    setTimeout(function() {
+      var u = new app.Vector(-1,3), // testing against homework values
+          v = new app.Vector(7,2),
+          w = new app.Vector(5,0),
+          un = u.normalize(),
+          vn = v.normalize(),
+          wn = w.normalize();
+      assert(un.isEqual(app.Vector(-0.31622776601683794, 0.9486832980505138)), "u normalization is correct");
+      assert(vn.isEqual(app.Vector(0.9615239476408232, 0.27472112789737807)), "v normalization is correct");
+      assert(wn.isEqual(app.Vector(1, 0)), "w normalization is correct");
+      resume();
+    }, 200);
+  });
+
+  // Testing distance
+  test("Test Vector.distance() function", function() {
+    pause();
+    setTimeout(function() {
+      var u = new app.Vector(-1,3), // testing against homework values
+          v = new app.Vector(7,2);
+      assert(u.distance(u,v) === 8.06225774829855, "distance between two arrays is correct");
+      resume();
+    }, 200);
+  });
+
+  // Testing dot product
+  test("Test Vector.dot() function", function() {
+    pause();
+    setTimeout(function() {
+      var u = new app.Vector(-1,3), // testing against homework values
+          e = new app.Vector(1,0),
+          v = new app.Vector(7,2),
+          w = new app.Vector(5,0);
+      assert(u.dot(u,u) === 10, "u * u dot product is correct");
+      assert(u.dot(u,v) === -1, "u * v dot product is correct");
+      assert(u.dot(v,w) === 35, "v * w dot product is correct");
+      assert(u.dot(u,e) === -1, "u * e dot product is correct");
+      resume();
+    }, 200);
+  });
+  
+  // Testing perp function that creates a new vector perpendicular to the original
+  test("Test Vector.perp() function", function() {
+    pause();
+    setTimeout(function() {
+      var u = new app.Vector(-1,3), // testing against homework values
+          e = new app.Vector(1,0),
+          v = new app.Vector(7,2),
+          w = new app.Vector(5,0),
+          up = u.perp(), // use self as default
+          ep = e.perp(e),
+          vp = v.perp(v),
+          wp = w.perp(w);
+      // let's see what it does... aha...
+      /*
+      console.log("[" + u.x + ", " + u.y + "] [" + up.x + ", " + up.y + "]");    
+      console.log("[" + e.x + ", " + e.y + "] [" + ep.x + ", " + ep.y + "]");    
+      console.log("[" + v.x + ", " + v.y + "] [" + vp.x + ", " + vp.y + "]");    
+      console.log("[" + w.x + ", " + w.y + "] [" + wp.x + ", " + wp.y + "]");  
+      */  
+      assert(up.isEqual(app.Vector(-3, -1)), "u perp is correct");
+      assert(ep.isEqual(app.Vector(0, 1)), "e perp is correct");
+      assert(vp.isEqual(app.Vector(-2, 7)), "v perp is correct");
+      assert(wp.isEqual(app.Vector(0, 5)), "w perp is correct");
+      resume();
+    }, 200);
+  });
+
+};
+</script>
+<style>
+h1, h2 { font-size: 20px; }
+#results li.pass { color: green; }
+
+#results li.fail { color: red; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Test vector functions</h1>
+  <h2>Mikey Micheletti, Vector Homework</h2>
+</header>
+<ul id="results">
+</ul>
+</body>
+</html>
