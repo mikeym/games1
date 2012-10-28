@@ -5,28 +5,6 @@
   Font: http://www.dafont.com/chocolate-box.font
 */
 
-html {
-  height: 100%;  
-}
-
-body {
-  margin: 0; 
-  height: 100%;
-  background: rgb(8,17,28);
-}
-
-/* Chocolate Box outline */
-@font-face {
-    font-family: 'cboxdeco';
-    src: url('fonts/c_box_d-webfont.eot');
-    src: url('fonts/c_box_d-webfont.eot?#iefix') format('embedded-opentype'),
-         url('fonts/c_box_d-webfont.woff') format('woff'),
-         url('fonts/c_box_d-webfont.ttf') format('truetype'),
-         url('fonts/c_box_d-webfont.svg#chocolateboxdecorativeregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
 /* Chocolate Box regular */
 @font-face {
     font-family: 'cboxregular';
@@ -37,6 +15,30 @@ body {
          url('fonts/c_box-webfont.svg#chocolateboxregular') format('svg');
     font-weight: normal;
     font-style: normal;
+}
+
+html {
+  height: 100%;  
+}
+
+body {
+  margin: 0; 
+  height: 100%;
+  background: rgb(8,17,28);
+  /* 
+  Hack to preload webfont for the splash screen canvas in stupid safari / chrome.
+  Still erratic on the iPhone though. Grrr. TODO
+  */
+  font: 20px cboxregular, "Times New Roman", Times, Georgia, serif;
+}
+
+#patternBkgdCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1; 
 }
 
 /* outer bounding div */
@@ -73,170 +75,25 @@ body {
 /* click anywhere on splash screen */
 #splashScreen{ cursor: pointer; }
 
-/* banner styling */
-.splashBanner {
-  font: 4.5em cboxdeco, "Times New Roman", Times, Georgia, serif;
+/* canvas splash screen logo, default size for large screens */
+#splashLogoBox {
+  height: 600px;
+  width: 600px;
+  margin: 20px auto;
+  z-index: 99;
+  font: 2em cboxdeco, "Times New Roman", Times, Georgia, serif;
+}
+
+/* canvas element logos drawn dynamically by logo.js */
+.logoBox canvas {
+  height: 100%;
+  width: 100%;
+  display: block;
+  /* fallback canvas text style */
+  font: 2em cboxdeco, "Times New Roman", Times, Georgia, serif;
   color: rgb(140,59,29);
   text-shadow: 2px 2px 0px #08111c;
   text-align: center;
-  margin: .5em auto;
-  display: block;  
-  position: relative; 
-  width:588px;
-}
-
-/* arc banner setup (circle path) props to http://csswarp.eleqtriq.com/ */
-.splashBanner>span[class^=w]:nth-of-type(n+0){
-    display:block; 
-    position:absolute;
-    -moz-transform-origin:50% 100%; 
-    -webkit-transform-origin:50% 100%; 
-    -o-transform-origin:50% 100%; 
-    -ms-transform-origin:50% 100%; 
-    transform-origin:50% 100%; }
-
-.splashBanner span{
-  line-height: 0.65; 
-  white-space: pre; 
-}
-
-.splashBanner .w0 { /* M */
-  -moz-transform: rotate(-0.82rad);
-  -webkit-transform: rotate(-0.82rad);
-  -o-transform: rotate(-0.82rad);
-  -ms-transform: rotate(-0.82rad); 
-  transform: rotate(-0.82rad);
-  width: 106px; 
-  height: 59px; 
-  left: 70.03px; 
-  top: 124.87px;
-}
-
-.splashBanner .w1 { /* i */
-  -moz-transform: rotate(-0.56rad);
-  -webkit-transform: rotate(-0.56rad);
-  -o-transform: rotate(-0.56rad);
-  -ms-transform: rotate(-0.56rad);
-  transform: rotate(-0.56rad);
-  width: 19px; 
-  height: 59px; 
-  left: 161.02px; 
-  top: 86.07px;
-}
-
-.splashBanner .w2 { /* k */
-  -moz-transform: rotate(-0.39rad);
-  -webkit-transform: rotate(-0.39rad);
-  -o-transform: rotate(-0.39rad);
-  -ms-transform: rotate(-0.39rad); 
-  transform: rotate(-0.39rad);
-  width: 58px; 
-  height: 59px; 
-  left: 174.92px; 
-  top: 69.12px;
-}
-
-.splashBanner .w3 { /* e */
-  -moz-transform: rotate(-0.17rad);
-  -webkit-transform: rotate(-0.17rad);
-  -o-transform: rotate(-0.17rad);
-  -ms-transform: rotate(-0.17rad); 
-  transform: rotate(-0.17rad);
-  width: 46px; 
-  height: 59px; 
-  left: 229.87px; 
-  top: 55.18px;
-}
-
-.splashBanner .w4 { /* y */
-  -moz-transform: rotate(0.05rad);
-  -webkit-transform: rotate(0.05rad);
-  -o-transform: rotate(0.05rad);
-  -ms-transform: rotate(0.05rad); 
-  transform: rotate(0.05rad);
-  width: 57px; 
-  height: 59px; 
-  left: 274.68px; 
-  top: 52.32px;
-}
-
-.splashBanner .w5 { /* C */
-  -moz-transform: rotate(0.32rad);
-  -webkit-transform: rotate(0.32rad);
-  -o-transform: rotate(0.32rad);
-  -ms-transform: rotate(0.32rad); 
-  transform: rotate(0.32rad);
-  width: 72px; 
-  height: 59px; 
-  left: 329.33px; 
-  top: 64.34px;
-}
-
-.splashBanner .w6 { /* e */
-  -moz-transform: rotate(0.58rad);
-  -webkit-transform: rotate(0.58rad);
-  -o-transform: rotate(0.58rad);
-  -ms-transform: rotate(0.58rad); 
-  transform: rotate(0.58rad);
-  width: 46px; 
-  height: 59px; 
-  left: 394.29px; 
-  top: 89.77px;
-}
-
-.splashBanner .w7 { /* l */
-  -moz-transform: rotate(0.77rad);
-  -webkit-transform: rotate(0.77rad);
-  -o-transform: rotate(0.77rad);
-  -ms-transform: rotate(0.77rad); 
-  transform: rotate(0.77rad);
-  width: 43px; 
-  height: 59px; 
-  left: 429.67px; 
-  top: 116.94px;
- }
-
-.splashBanner .w8 { /* l */
-  -moz-transform: rotate(0.95rad);
-  -webkit-transform: rotate(0.95rad);
-  -o-transform: rotate(0.95rad);
-  -ms-transform: rotate(0.95rad); 
-  transform: rotate(0.95rad);
-  width: 43px; 
-  height: 59px; 
-  left: 456.98px; 
-  top: 148.77px;
-}
-
-/* Let's have some fun */
-#splashInvite {
-  font: 2em cboxregular, "Times New Roman", Times, Georgia, serif;
-  color: rgb(140,59,29);
-  text-shadow: 1px 1px 0px #08111c;
-  text-align: center;
-  margin: .5em auto;
-  position: relative;
-  top: 2.5em;
-}
-#splashInvite:hover {
-  text-shadow: 1px 1px 0px #08111c, 0px 0px 19px #C95D37; 
-}
-
-/* spade char, large for splash */
-.splashSpade {
-  font-size: 10em; 
-  position: relative;
-  top: 0.55em;
-  text-align: center; 
-}
-/* spade char, smaller for other screens in pale boxes */
-#menuScreen .splashSpade,
-#settingsScreen .splashSpade,
-#aboutScreen .splashSpade {
-  font-size: 7em; 
-  position: relative;
-  top: 0.25em;
-  text-align: center; 
 }
 
 /* pale wrapper around menu, settings, etc */
@@ -259,20 +116,6 @@ body {
   background: linear-gradient(135deg,  rgba(234,171,126,1) 0%,rgba(236,190,156,1) 100%); /* W3C */
   -webkit-box-shadow:  9px 9px 9px 9px rgba(8, 17, 28, 0.25);
   box-shadow:  9px 9px 9px 9px rgba(8, 17, 28, 0.25);
-}
-
-/* banner in menu, etc. */ 
-h1.splashBanner { 
-  position: relative;
-  left: -32%;
-  text-align: center;
-  margin: 0 auto;
-  font-family: cboxregular, "Times New Roman", Times, Georgia, serif;
-  -moz-transform: scale(0.5);
-  -webkit-transform: scale(0.5);
-  -o-transform: scale(0.5);
-  -ms-transform: scale(0.5);
-  transform: scale(0.5);
 }
 
 /* general button appearance */
@@ -314,9 +157,19 @@ button:active {
 /* menu screen */
 menu {
   position: relative;
-  top: 0.5em;
+  top: -120px;
   left: -2.25em; 
 }
+
+/* splash logo in the menu, settings & about screens */
+#menuLogoBox,
+#settingsLogoBox,
+#aboutLogoBox {
+  height: 300px;
+  width: 300px;
+  margin: 10px auto;
+}
+
 li { 
   list-style: none; 
   margin: 0;
@@ -329,9 +182,13 @@ li {
 /* settings screen */
 #settingsText {
   margin: 3em auto;  
+  position: relative;
+  top: -120px;  
 }
 #settingsScreen button {
   width: 5em;  
+  position: relative;
+  top: -120px;
 }
 
 /* about screen */
@@ -341,45 +198,29 @@ li {
   line-height: 1.25em;
   text-shadow: none;
 }
-#aboutText { margin: 1em; }
+#aboutText { 
+  margin: 0 1em; 
+  position: relative;
+  top: -120px;
+}
 #aboutScreen button {
   width: 5em;  
+  position: relative;
+  top: -120px;
 }
 
 /* game screen logo acts as a button to return to the menu */
-#gameLogo {
-  height: 40px;
-  width: 40px;
+/* splash logo in the menu */
+#gameLogoBox {
+  height: 150px;
+  width: 150px;
   position: absolute;
-  bottom: 45px;
-  right: 45px;
+  bottom: -50px;
+  right: 0px;
   cursor: pointer;
-  display: block; 
+  display: block;
 }
-#gameLogo .splashBanner { 
-  position: relative;
-  font-family: cboxregular, "Times New Roman", Times, Georgia, serif;
-  left: -45px;
-  text-align: left;
-  margin: 0;
-  width: 40px;
-  text-shadow: 1px 1px 0px #08111c;
-  -moz-transform: scale(0.2);
-  -webkit-transform: scale(0.2);
-  -o-transform: scale(0.2);
-  -ms-transform: scale(0.2);
-  transform: scale(0.2);
-}
-#gameLogo .splashSpade {
-  font-size: 1.5em; 
-  margin: 0.25em 0 0 0.5em; 
-  text-shadow: 1px 1px 0px rgba(8,17,28,0.25);
-}
-#gameMenuText {
-  font-size: 0.75em;
-  margin: 1em 0 0 0.25em;
-  text-shadow: 1px 1px 0px rgba(8,17,28,0.25);
-}
+
 #gameScreenTODO {
    margin: 5em auto;
   text-align: center; 
@@ -395,32 +236,18 @@ li {
     font-size: 18px;
   }
   
-  /* splash screen */
-  #splashScreen .splashBanner,
-  #splashScreen .splashSpade,
-  #splashInvite {
-    -moz-transform: scale(0.6);
-    -webkit-transform: scale(0.6);
-    -o-transform: scale(0.6);
-    -ms-transform: scale(0.6);
-    transform: scale(0.6);
-  }
-  #splashScreen .splashBanner { 
-    width: 441px; 
-    left: -0.5em;
-  }
-  #splashScreen .splashSpade { top: 0.2em; }
-  #splashInvite { top: -0.5em; }
+  /* splash screen logo */
+  #splashLogoBox { width: 550px; height: 550px; }
   
-  /* splash in menu, etc */
-  h1.splashBanner { 
-    left: -40%;
-    -moz-transform: scale(0.4);
-    -webkit-transform: scale(0.4);
-    -o-transform: scale(0.4);
-    -ms-transform: scale(0.4);
-    transform: scale(0.4);
-  } 
+  /* menu, settings and about screen logos and control adjustments */
+  #menuLogoBox,
+  #settingsLogoBox,
+  #aboutLogoBox { width: 200px; height: 200px; }
+  #aboutText,
+  #aboutScreen button,
+  #settingsText,
+  #settingsScreen button,
+  menu { top: -60px; }
   
   #menuScreen button { margin-left: 0; } 
 }
@@ -429,31 +256,17 @@ li {
   #game { font-size: 16px; }
   
   /* splash screen */
-  #splashScreen .splashBanner,
-  #splashScreen .splashSpade,
-  #splashInvite {
-    -moz-transform: scale(0.5);
-    -webkit-transform: scale(0.5);
-    -o-transform: scale(0.5);
-    -ms-transform: scale(0.5);
-    transform: scale(0.5);
-  }
-  #splashScreen .splashBanner { 
-    width: 279px; 
-    left: -0.9em;
-  }
-  #splashScreen .splashSpade { top: 0.2em; }
-  #splashInvite { top: -0.5em; }
+  #splashLogoBox { width: 500px; height: 500px; }
   
-  /* splash in menu, etc */
-  h1.splashBanner { 
-    left: -52%;
-    -moz-transform: scale(0.3);
-    -webkit-transform: scale(0.3);
-    -o-transform: scale(0.3);
-    -ms-transform: scale(0.3);
-    transform: scale(0.3);
-  }
+  /* menu, settings and about screen logos and control adjustments */
+  #menuLogoBox,
+  #settingsLogoBox,
+  #aboutLogoBox { width: 180px; height: 180px; }
+  #aboutText,
+  #aboutScreen button,
+  #settingsText,
+  #settingsScreen button,
+  menu { top: -50px; }
   
   #menuScreen button { margin-left: -0.5em; } 
 }
@@ -473,24 +286,27 @@ li {
   }
   
   /* splash screen */
-  #splashScreen .splashBanner,
-  #splashScreen .splashSpade {
-    -moz-transform: scale(0.4);
-    -webkit-transform: scale(0.4);
-    -o-transform: scale(0.4);
-    -ms-transform: scale(0.4);
-    transform: scale(0.4);
-  }
-  #splashScreen .splashBanner { 
-    width: 223px; 
-    left: -1.15em;
-  }
-  #splashScreen .splashSpade { top: 0.05em; }
-  #splashInvite { top: -2.25em; }
+  #splashLogoBox { width: 425px; height: 425px; }
   
-  /* splash in menu, etc */
-  h1.splashBanner { left: -65%; }
+  /* menu, settings and about screen logos and control adjustments */
+  #menuLogoBox,
+  #settingsLogoBox,
+  #aboutLogoBox { width: 170px; height: 170px; }
+  #aboutText,
+  #aboutScreen button,
+  #settingsText,
+  #settingsScreen button,
+  menu { top: -50px; }
   
   #menuScreen button { margin-left: -1em; } 
 }
 
+@media (max-width: 450px) {
+  /* splash screen */
+  #splashLogoBox { width: 375px; height: 375px; }  
+}
+
+@media (max-width: 320px) {
+  /* splash screen */
+  #splashLogoBox { width: 300px; height: 300px; }  
+}

@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 <title>MikeyCell</title>
 <!-- M2 HTML5 Gameplay homework -->
-<script src="../../scripts/modernizr.js"></script>
 <link rel="stylesheet" href="mikeycell.css">
+<script src="../../scripts/modernizr.js"></script>
 </head>
 
 <body>
@@ -14,21 +14,17 @@
   
     <!-- splash screen -->
     <article id="splashScreen" class="screen">
-      <div class="splashBanner">
-        <span class='w0'>M</span><span class='w1'>i</span><span class='w2'>k</span><span class='w3'>e</span><span class='w4'>y</span><span class='w5'>C</span><span class='w6'>e</span><span class='w7'>l</span><span class='w8'>l</span>
+      <div id="splashLogoBox" class="logoBox">
+        <!-- canvas logo drawn here by logo.js -->
       </div>
-      <div class="splashSpade">&#x2660;</div>
-      <div id="splashInvite">Let's Have Some Fun!</div>
     </article>
     
     <!-- main menu screen -->
     <article id="menuScreen" class="screen">
       <div class="contentWrapper">
-        <header>
-          <h1 class="splashBanner"><span class='w0'>M</span><span class='w1'>i</span><span class='w2'>k</span><span class='w3'>e</span><span class='w4'>y</span><span class='w5'>C</span><span class='w6'>e</span><span class='w7'>l</span><span class='w8'>l</span>
-         </h1>
-          <div class="splashSpade">&#x2660;</div>
-        </header> 
+        <div id="menuLogoBox" class="logoBox">
+          <!-- canvas logo drawn here by logo.js -->
+        </div>
         <menu>
           <ul>
             <li><button type="button" id="gameButton" data-screen="gameScreen">Play Game</button></li>
@@ -42,23 +38,17 @@
     <!-- game screen -->
     <article id="gameScreen" class="screen">
       <div id="gameScreenTODO">TODO: Write The Game</div>
-      <!-- TODO: revisit this navigation once game proper is in work -->
-      <nav id="gameLogo">
-         <h1 class="splashBanner"><span class='w0'>M</span><span class='w1'>i</span><span class='w2'>k</span><span class='w3'>e</span><span class='w4'>y</span><span class='w5'>C</span><span class='w6'>e</span><span class='w7'>l</span><span class='w8'>l</span>
-        </h1>
-        <div class="splashSpade">&#x2660;</div>
-        <div id="gameMenuText">Menu</div>
-      </nav>
+        <a id="gameLogoBox" class="logoBox" title="Game Menu">
+          <!-- canvas logo drawn here by logo.js -->
+        </a>
     </article>
     
     <!-- settings screen -->
     <article id="settingsScreen" class="screen">
       <div class="contentWrapper">
-        <header>
-          <h1 class="splashBanner"><span class='w0'>M</span><span class='w1'>i</span><span class='w2'>k</span><span class='w3'>e</span><span class='w4'>y</span><span class='w5'>C</span><span class='w6'>e</span><span class='w7'>l</span><span class='w8'>l</span>
-         </h1>
-          <div class="splashSpade">&#x2660;</div>
-        </header> 
+        <div id="settingsLogoBox" class="logoBox">
+          <!-- canvas logo drawn here by logo.js -->
+        </div>
         <div id="settingsText">TODO: Set some settings</div>
         <button type="button" id="settingsMenuButton" data-screen="menuScreen">Ok</button>
       </div>
@@ -67,15 +57,13 @@
     <!-- about screen -->
     <article id="aboutScreen" class="screen">
       <div class="contentWrapper">
-        <header>
-          <h1 class="splashBanner"><span class='w0'>M</span><span class='w1'>i</span><span class='w2'>k</span><span class='w3'>e</span><span class='w4'>y</span><span class='w5'>C</span><span class='w6'>e</span><span class='w7'>l</span><span class='w8'>l</span>
-         </h1>
-          <div class="splashSpade">&#x2660;</div>
-        </header>
+        <div id="aboutLogoBox" class="logoBox">
+          <!-- canvas logo drawn here by logo.js -->
+        </div>
         <section id="aboutText"> 
           <p>This FreeCell variant is being developed for the UW HTML5 Web and Mobile Game Development course (Fall, 2012).</p>
           <cite>Created by Mikey Micheletti</cite>
-          <p>Version 0.1 / <time datetime="2012-10-13">October 13, 2012</time></p>
+          <p>Version 0.2 / <time datetime="2012-10-27">October 27, 2012</time></p>
         </section>
         <button type="button" id="aboutMenuButton" data-screen="menuScreen">Ok</button>
       </div>
