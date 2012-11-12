@@ -6,14 +6,17 @@ var mikeycell = mikeycell || { };
 
 // Used to create a diamond pattern behind other elements
 mikeycell.pattern = (function () {
-  var that = this;
+  var that = this,
+      m = mikeycell;
+  
+  if (m.debug > m.NODEBUG) { console.log('pattern'); }
   
   // draws a diamond into a tiny canvas, for pattern use
   function drawSinglePatternElement() {
     var $canvas = $("<canvas />")[0], // create a canvas
         ctx = $canvas.getContext('2d');
         
-    console.log('mikeycell.pattern.drawSinglePatternElement');
+    if (m.debug === m.DEBUGALL) { console.log('pattern.drawSinglePatternElement'); }
     
     // set context canvas dimensions 20x24
     ctx.canvas.width = 14;
@@ -27,8 +30,8 @@ mikeycell.pattern = (function () {
     ctx.lineTo( 0,  9); // left corner
     ctx.lineTo( 7,  0); // back to top
     
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "rgba(17,36,59, 0.75)";
+    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = "rgba(0,0,0, 0.9)";
     ctx.closePath();
     ctx.stroke();
     
@@ -44,7 +47,7 @@ mikeycell.pattern = (function () {
         ctx, // large background canvas context
         pattern; // pattern we'll create
         
-    console.log('mikeycell.pattern.drawDiamondPatternBackground');
+    if (m.debug === m.DEBUGALL) { console.log('pattern.drawDiamondPatternBackground'); }
 
     // create canvas and get its context
     ctx = $canvas.getContext('2d');

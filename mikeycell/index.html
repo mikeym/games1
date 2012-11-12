@@ -37,10 +37,23 @@
     
     <!-- game screen -->
     <article id="gameScreen" class="screen">
-      <div id="gameScreenTODO">TODO: Write The Game</div>
-        <a id="gameLogoBox" class="logoBox" title="Game Menu">
-          <!-- canvas logo drawn here by logo.js -->
-        </a>
+      <div id="gameViewBox">
+        <!-- game drawn here on dynamically created canvas -->
+      </div>
+      <menu id="gameScreenMenu">
+        <a id="newGameLink" title="Start New Game">New Game</a>
+        <a id="gameMenuLink" title="Game Menu">Menu</a>
+      </menu>
+      <!-- interim gameplay form -->
+      <form id="charPlayForm">
+        <label for="theCard">Move this card: </label>
+        <input id="theCard" type="text" size="4">
+        <label for="theDest">To this destination: </label>
+        <input id="theDest" type="text" size="4">
+        <button id="moveBtn" type="button">Move</button>
+        <label for="theResult">Result: </label>
+        <input id="theResult" type="text" size="14">
+      </form>
     </article>
     
     <!-- settings screen -->
@@ -63,7 +76,7 @@
         <section id="aboutText"> 
           <p>This FreeCell variant is being developed for the UW HTML5 Web and Mobile Game Development course (Fall, 2012).</p>
           <cite>Created by Mikey Micheletti</cite>
-          <p>Version 0.2 / <time datetime="2012-10-27">October 27, 2012</time></p>
+          <p>Version 0.4 / <time datetime="2012-11-12">November 12, 2012</time></p>
         </section>
         <button type="button" id="aboutMenuButton" data-screen="menuScreen">Ok</button>
       </div>

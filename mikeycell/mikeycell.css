@@ -44,8 +44,8 @@ body {
 /* outer bounding div */
 #game {
   position: relative;
-  width: 90%;
-  height: 90%;
+  width: 1014px;
+  min-height: 700px;
   margin: 3% auto;
   font: 20px cboxregular, "Times New Roman", Times, Georgia, serif;
   color: rgb(140,59,29);
@@ -71,9 +71,6 @@ body {
 #game .screen.active {
   display: block; 
 }
-
-/* click anywhere on splash screen */
-#splashScreen{ cursor: pointer; }
 
 /* canvas splash screen logo, default size for large screens */
 #splashLogoBox {
@@ -155,7 +152,7 @@ button:active {
 }
 
 /* menu screen */
-menu {
+#menuScreen menu {
   position: relative;
   top: -120px;
   left: -2.25em; 
@@ -209,22 +206,39 @@ li {
   top: -120px;
 }
 
-/* game screen logo acts as a button to return to the menu */
-/* splash logo in the menu */
-#gameLogoBox {
-  height: 150px;
-  width: 150px;
+/* game screen links */
+#gameScreenMenu {
+  height: 20px;
   position: absolute;
-  bottom: -50px;
+  top: -7px;
   right: 0px;
-  cursor: pointer;
   display: block;
+  z-index: 20;
+}
+/* game screen menu links */
+#gameScreenMenu a { 
+  display: inline-block;
+  cursor: pointer; 
+  margin: 0 30px 0 35px;
+  font-size: 18px;
+}
+#gameScreenMenu a:hover,
+#gameScreenMenu a:active { border-bottom: 1px solid rgb(140,59,29); }
+
+/* Game play canvas lives here, default to large view */
+#gameViewBox {
+  height: 1000px;
+  width: 1014px;
 }
 
-#gameScreenTODO {
-   margin: 5em auto;
-  text-align: center; 
+/* Game play form, interim */
+#charPlayForm {
+  position: relative;
+  top: -290px; 
+  display: none;
 }
+#charPlayForm input,
+#charPlayForm button { margin-right: 20px; }
 
 /* mobile views, the curved logo is painful to scale */
 

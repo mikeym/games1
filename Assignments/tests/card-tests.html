@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Card Deck Tests</title>
+  <!-- Mikey Micheletti, for Gameplay course -->
+</head>
+<body>
+  <h1>Card deck sample</h1>
+  <script src="../scripts/playingcards.js"></script>
+  
+  <h2>Cards In Order</h2>
+  <div id="cardsOrdered"></div>
+  <script>
+    var cardsOrdered = app.cards.newDeck(),
+        len = app.cards.CARDS_IN_DECK,
+        i,
+        cards1Div = document.getElementById("cardsOrdered"),
+        cardDiv,
+        card;
+        
+    // display ordered deck    
+    for (i = 0; i < len; i++) {
+      card = cardsOrdered[i];
+      cardDiv = document.createElement('div');
+      cardDiv.innerHTML = card.getShortString() + ', ' + card.getLongString() + ' -- (' +
+                          '.id: ' + card.id + ', ' + 
+                          '.rank: ' + card.rank + ', ' +
+                          '.suit: ' + card.suit + ', ' +
+                          '.suitSymbol: ' + card.suitSymbol + ', ' +
+                          '.suitName: ' + card.suitName + ', ' +
+                          '.suitColor: ' + card.suitColor + ')';
+                          
+      cards1Div.appendChild(cardDiv);
+      
+    }
+    
+  </script>
+
+  <h2>Cards Shuffled</h2>
+  <div id="cardsShuffled"></div>
+  <script>
+    var cardsShuffled = app.cards.newDeck(true),
+        len = app.cards.CARDS_IN_DECK,
+        i,
+        cards2Div = document.getElementById("cardsShuffled"),
+        cardDiv,
+        card;
+        
+    // display ordered deck    
+    for (i = 0; i < len; i++) {
+      card = cardsShuffled[i];
+      cardDiv = document.createElement('div');
+      cardDiv.innerHTML = card.getShortString() + ', ' + card.getLongString() + ' -- (' +
+                          '.id: ' + card.id + ', ' + 
+                          '.rank: ' + card.rank + ', ' +
+                          '.suit: ' + card.suit + ', ' +
+                          '.suitSymbol: ' + card.suitSymbol + ', ' +
+                          '.suitName: ' + card.suitName + ', ' +
+                          '.suitColor: ' + card.suitColor + ')';
+                          
+      cards2Div.appendChild(cardDiv);
+      
+    }
+    
+  </script>
+
+  <h2>Cards Ordered Again To Make Sure I Didn't Bust Something</h2>
+  <div id="cardsOrdered2"></div>
+  <script>
+    var cardsOrdered2 = app.cards.newDeck(),
+        len = app.cards.CARDS_IN_DECK,
+        i,
+        cards3Div = document.getElementById("cardsOrdered2"),
+        cardDiv,
+        card;
+        
+    // display ordered deck    
+    for (i = 0; i < len; i++) {
+      card = cardsOrdered2[i];
+      cardDiv = document.createElement('div');
+      cardDiv.innerHTML = card.getShortString() + ', ' + card.getLongString() + ' -- (' +
+                          '.id: ' + card.id + ', ' + 
+                          '.rank: ' + card.rank + ', ' +
+                          '.suit: ' + card.suit + ', ' +
+                          '.suitSymbol: ' + card.suitSymbol + ', ' +
+                          '.suitName: ' + card.suitName + ', ' +
+                          '.suitColor: ' + card.suitColor + ')';
+                          
+      cards3Div.appendChild(cardDiv);
+      
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Game Model Tests</title>
+  <!-- Mikey Micheletti, for Gameplay course -->
+</head>
+<body>
+  <h1>Game Model Tests</h1>
+  <style>
+    .Red { color: red; }
+    .Black { color: black; }
+    .tableau { float: left; width: 12%; display: inline-block; }
+  </style>
+  <script src="../scripts/playingcards.js"></script>
+  <script src="../scripts/gamemodel.js"></script>
+  
+  <p>Basic operations</p>
+  <div id="basic"></div>
+  
+  <p>Tableau deal</p>
+  <div id="t1" class="tableau"></div>
+  <div id="t2" class="tableau"></div>
+  <div id="t3" class="tableau"></div>
+  <div id="t4" class="tableau"></div>
+  <div id="t5" class="tableau"></div>
+  <div id="t6" class="tableau"></div>
+  <div id="t7" class="tableau"></div>
+  <div id="t8" class="tableau"></div>
+
+  <div style="clear: both;"> </div>
+  <p>Tableau deal from model</p>
+  <div id="tt1" class="tableau"></div>
+  <div id="tt2" class="tableau"></div>
+  <div id="tt3" class="tableau"></div>
+  <div id="tt4" class="tableau"></div>
+  <div id="tt5" class="tableau"></div>
+  <div id="tt6" class="tableau"></div>
+  <div id="tt7" class="tableau"></div>
+  <div id="tt8" class="tableau"></div>
+
+  <script>
+    var m = app.Model,
+        out = document.getElementById('basic'),
+        numCards = app.cards.CARDS_IN_DECK,
+        i, 
+        t, 
+        // essentially a 1-based array (tabs[1] = m.TABLEAU1)
+        tabs = [0, m.TABLEAU1, m.TABLEAU2, m.TABLEAU3, m.TABLEAU4, 
+                m.TABLEAU5, m.TABLEAU6, m.TABLEAU7, m.TABLEAU8];
+    
+    // 100 shuffles
+    basic.innerHTML += '<p>100 Shuffles, first card in Model.deck: <br> ';
+    for (i = 0; i < 100; i++) {
+      m.Deck = app.cards.newDeck(true); // shuffled
+      basic.innerHTML += '<span class="' + m.Deck[0].suitColor + '">' + 
+                          m.Deck[0].getShortString() + 
+                          '</span> ';
+    }
+    
+    // Put cards into the cells
+    basic.innerHTML += '</p><p>Use last shuffle, put first four cards into the four cells: <br>';
+    m.Cells.place(m.Deck[0], m.CELL1);
+    m.Cells.place(m.Deck[1], m.CELL2);
+    m.Cells.place(m.Deck[2], m.CELL3);
+    m.Cells.place(m.Deck[3], m.CELL4);
+    basic.innerHTML += 'Cell1: <span class="' + m.Cells[m.CELL1].suitColor + '">' + m.Cells[m.CELL1].getShortString() + '</span><br>';
+    basic.innerHTML += 'Cell2: <span class="' + m.Cells[m.CELL2].suitColor + '">' + m.Cells[m.CELL2].getShortString() + '</span><br>';
+    basic.innerHTML += 'Cell3: <span class="' + m.Cells[m.CELL3].suitColor + '">' + m.Cells[m.CELL3].getShortString() + '</span><br>';
+    basic.innerHTML += 'Cell4: <span class="' + m.Cells[m.CELL4].suitColor + '">' + m.Cells[m.CELL4].getShortString() + '</span></p>';
+    
+    // Try to put more cards into the cells, should gripe
+    basic.innerHTML += '<p>Placing another card into a non-empty cell should return false and fail: <br>';
+    basic.innerHTML += 'Cell1 : ' + m.Cells.place(m.Deck[4], m.CELL1) + '<br>';
+    basic.innerHTML += 'Cell2 : ' + m.Cells.place(m.Deck[5], m.CELL2) + '<br>';
+    basic.innerHTML += 'Cell3 : ' + m.Cells.place(m.Deck[6], m.CELL3) + '<br>';
+    basic.innerHTML += 'Cell4 : ' + m.Cells.place(m.Deck[7], m.CELL4) + '</p>';
+    
+    // Shuffle again and place the cards into the tableaux, not a real test just getting the idea...
+    m.Deck = app.cards.newDeck(true);
+    for (i = 0, t = 1; i < numCards; i++) {
+      m.Tableau.place(m.Deck[i], tabs[t]);
+      document.getElementById('t' + t).innerHTML += 
+        '<span class="' + m.Deck[i].suitColor + '">' + m.Deck[i].getShortString() + '</span><br>';
+      if (t === 8) {
+        t = 1;
+      } else {
+        t++;
+      }
+    }
+    
+    // Shuffle again and let the model sort into tableau
+    m.Deck = app.cards.newDeck(true);
+    m.Tableau.sortInto(m.Deck);
+    for (t = 1; t < tabs.length; t++) {
+      for (i = 0; i < m.Tableau[tabs[t]].length; i++) {
+        var theTableau = m.Tableau[tabs[t]];
+        var theCard = theTableau[i];
+        document.getElementById('tt' + t).innerHTML +=
+          '<span class="' + theCard.suitColor + '">' + 
+                            theCard.getShortString() +  '</span><br>';        
+      }
+    }
+    
+    
+    
+  </script>
+</body>
+</html>

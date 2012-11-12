@@ -6,38 +6,43 @@ var mikeycell = mikeycell || { };
 
 // Shared screen handling
 mikeycell.screens = (function () {
+  var m = mikeycell;
+  
   'use strict';
+  
+  if (m.debug > m.NODEBUG) { console.log('screens'); }
     
   // Show the screen with the given id
-  function showScreen (screenId) {
-    console.log('mikeycell.screens.showScreen ' + screenId);
-    
+  function showScreen (screenId) {    
     var $currentScreen = $('#game .screen.active'),
         $nextScreen = $('#' + screenId)
+
+  if (m.debug > m.NODEBUG) { console.log('screens.showScreen: ' + screenId); }
+
     if ($currentScreen) {
       $currentScreen.removeClass('active');
     }
     if ($nextScreen) {
       $nextScreen.addClass('active');
-      mikeycell.screens[screenId].run();
+      m.screens[screenId].run();
     }
   }
   
   // Initialize by displaying the splash screen
   function start () {
-    console.log('mikeycell.screens.start');
+    if (m.debug > m.NODEBUG) { console.log('screens.start'); }
     
     // draw background pattern behind other elements, redraw after resizing
-		// aka 'the hard way'
-    mikeycell.pattern.drawDiamondPatternBackground( $('body') );
-		$(window)
-			.resize(function (event) {
-				$('#patternBkgdCanvas').remove();
-				mikeycell.pattern.drawDiamondPatternBackground( $('body') );
-			}
-		);
+    // aka 'the hard way'
+    m.pattern.drawDiamondPatternBackground( $('body') );
+    $(window)
+      .resize(function (event) {
+        $('#patternBkgdCanvas').remove();
+        m.pattern.drawDiamondPatternBackground( $('body') );
+      }
+    );
     
-    showScreen('splashScreen');
+    showScreen('splashScreen'); // without tagline or progress bar initially
   }
   
   // Publicly available methods of mikeycell.screens
@@ -50,28 +55,28 @@ mikeycell.screens = (function () {
 
 // Splash screen handling
 mikeycell.screens.splashScreen = (function () {
-  'use strict';
-  
-  var needsInit = true;
+  'use strict'; 
   
   // Initialize splash screen if needed
-  function run () {    
-    console.log('mikeycell.screens.splashScreen.run');
+  function run (showTagLine, showProgress, progressPct) {    
+    var $canvasBox = $('#splashLogoBox');
+  
+    if (m.debug > m.NODEBUG) { console.log('screens.splashScreen.run'); }
     
-    // one-time initialization
-    if (needsInit) {
-      // draw logo
-      var $canvasBox = $('#splashLogoBox');    
-      mikeycell.logo.drawLogo($canvasBox, true);
-      
+    // Draws logo on the splash screen. Will be called from the loader multiple
+    // times to display progress, and then to display the tagline when finished loading.
+    mikeycell.logo.drawLogo($canvasBox, showTagLine, showProgress, progressPct);
+  
+    // Setup the click handler and pointer styling for the splash screen only after loading.  
+    if (showTagLine) {
       $('#splashScreen')
-        // show menu screen when you click anywhere
+        .css('cursor', 'pointer')
         .click( function (event) {
-            mikeycell.screens.showScreen('menuScreen');
+            // show menu screen when you click anywhere
+            m.screens.showScreen('menuScreen');
           }
         );
     }
-    needsInit = false;
   }
   return { run: run };
   
@@ -80,25 +85,25 @@ mikeycell.screens.splashScreen = (function () {
 
 // Menu screen handling
 mikeycell.screens.menuScreen = (function () {
-  'use strict';
-
   var needsInit = true;
+  
+  'use strict';
   
   // Run when the menu screen is displayed
   function run () {        
-    console.log('mikeycell.screens.menuScreen.run');
+    if (m.debug > m.NODEBUG) { console.log('screens.menuScreen.run'); }
 
     // one-time initialization
     if (needsInit) {
       // draw logo, in timeout to permit webfont to load in safari / chrome
       var $canvasBox = $('#menuLogoBox');
-      mikeycell.logo.drawLogo($canvasBox, false);
+      m.logo.drawLogo($canvasBox, false);
       
       $('#menuScreen button')
         // navigate to the screen stored in the button's data
         .click( function (event) {
           var nextScreenId = $(event.target).data('screen');
-          mikeycell.screens.showScreen(nextScreenId);
+          m.screens.showScreen(nextScreenId);
         }
       );
       
@@ -106,7 +111,7 @@ mikeycell.screens.menuScreen = (function () {
       $(window)
         .resize(function (event) {
           $canvasBox.empty();
-          mikeycell.logo.drawLogo($canvasBox, false);
+          m.logo.drawLogo($canvasBox, false);
         }
       );
     }
@@ -118,25 +123,25 @@ mikeycell.screens.menuScreen = (function () {
 
 // About screen handling
 mikeycell.screens.aboutScreen = (function () {
-  'use strict';
-
   var needsInit = true;
+  
+  'use strict';
   
   // Run when the about screen is displayed
   function run () {
-    console.log('mikeycell.screens.aboutScreen.run');
+    if (m.debug > m.NODEBUG) { console.log('screens.aboutScreen.run'); }
     
     // one-time initialization
     if (needsInit) {
       // draw logo
       var $canvasBox = $('#aboutLogoBox');
-      mikeycell.logo.drawLogo($canvasBox, false);
+      m.logo.drawLogo($canvasBox, false);
 
       $('#aboutMenuButton')
         // navigate to the screen stored in the button's data
         .click( function (event) {
           var nextScreenId = $(event.target).data('screen');
-          mikeycell.screens.showScreen(nextScreenId);
+          m.screens.showScreen(nextScreenId);
         }
       );
       
@@ -144,7 +149,7 @@ mikeycell.screens.aboutScreen = (function () {
       $(window)
         .resize(function (event) {
           $canvasBox.empty();
-          mikeycell.logo.drawLogo($canvasBox, false);
+          m.logo.drawLogo($canvasBox, false);
         }
       );
     }
@@ -156,19 +161,19 @@ mikeycell.screens.aboutScreen = (function () {
 
 // Settings screen handling
 mikeycell.screens.settingsScreen = (function () {
-  'use strict';
-
   var needsInit = true;
+
+  'use strict';
   
   // Run when the settings screen is displayed
   function run () {
-    console.log('mikeycell.screens.settingsScreen.run');
+    if (m.debug > m.NODEBUG) { console.log('screens.settingsScreen.run'); }
     
     // one-time initialization
     if (needsInit) {
       // draw logo
       var $canvasBox = $('#settingsLogoBox');
-      mikeycell.logo.drawLogo($canvasBox, false);
+      m.logo.drawLogo($canvasBox, false);
       
       // just this one button for now, probably more later
       // may want to move this to a separate file if it gets too big
@@ -176,7 +181,7 @@ mikeycell.screens.settingsScreen = (function () {
         // navigate to the screen stored in the button's data
         .click( function (event) {
           var nextScreenId = $(event.target).data('screen');
-          mikeycell.screens.showScreen(nextScreenId);
+          m.screens.showScreen(nextScreenId);
         }
       );
       
@@ -184,7 +189,7 @@ mikeycell.screens.settingsScreen = (function () {
       $(window)
         .resize(function (event) {
           $canvasBox.empty();
-          mikeycell.logo.drawLogo($canvasBox, false);
+          m.logo.drawLogo($canvasBox, false);
         }
       );
     }
@@ -195,30 +200,46 @@ mikeycell.screens.settingsScreen = (function () {
 })();
 
 // Game screen handling
-// This will need to migrate later once it gets interesting
 mikeycell.screens.gameScreen = (function () {
-  'use strict';
-
   var needsInit = true;
   
+  'use strict';
+
   // Run when the game screen is displayed
   function run () {
-    console.log('mikeycell.screens.gameScreen.run');
+    var $canvasBox;
+
+    if (m.debug > m.NODEBUG) { console.log('screens.gameScreen.run'); }
     
     // menu/logo one-time initialization
     if (needsInit) {
       // draw logo
-      var $canvasBox = $('#gameLogoBox');
-      mikeycell.logo.drawLogo($canvasBox, false);
-
-      $canvasBox
-        // always goes to the menu
+      $('#gameMenuLink')
         .click( function (event) {
-          mikeycell.screens.showScreen('menuScreen');
+          m.screens.showScreen('menuScreen');
         }
       );
+      
+      $('#newGameLink')
+        .click( function (event) {
+          m.screens.showScreen('gameScreen');
+        }
+      );
+      
     }
     needsInit = false;
+    
+    // start a new game
+    m.view.newGame($('#gameViewBox'));
+
+    // if using character form, initialize it
+    if (m.showPlayForm) {
+      $('#charPlayForm').css('display', 'block');
+      $('#theCard').val('');
+      $('#theDest').val('');
+      $('#theResult').val('');
+    }
+    
   }
   return { run: run };
   

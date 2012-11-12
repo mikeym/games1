@@ -6,11 +6,16 @@ var mikeycell = mikeycell || { };
 
 // Used to create the MikeyCell logos used in the game
 mikeycell.logo = (function () {
-  var that = this;
+  var that = this,
+      m = mikeycell;
+      
+  if (m.debug > m.NODEBUG) { console.log('logo'); }
   
   // draw our logo within the supplied container element
-  function drawLogo($canvasBox, showTag) {
-    var $canvas = $("<canvas>MikeyCell</canvas>")[0], // create a canvas
+  // when showTag is true, writes "let's play" below spade symbol
+  // when showProgress is true, turns off tag and displays progress bar of progressPct length
+  function drawLogo($canvasBox, showTag, showProgress, progressPct) {
+    var $canvas = $('<canvas>MikeyCell</canvas>')[0],
         width = $canvas.width = $canvasBox.width(), // as wide as container
         height = $canvas.height = $canvasBox.height(), // as tall as container
         centerX = width / 2, // X-axis center
@@ -21,13 +26,16 @@ mikeycell.logo = (function () {
         textLogo = "MikeyCell",
         textSpade = "♠", // need to use actual spade character, not unicode. hmm...
         textTag = "Let's Have Some Fun!",
+        progressBar1PctWidth = (width / 2) / 100, // 1% progress bar tick
+        computedProgressBarWidth,
         i = 0, // loop counter for transfom
         ctx; // canvas context, we'll assign in a sec
         
-    console.log('mikeycell.logo.drawLogo');
+    if (m.debug === m.DEBUGALL) { console.log('logo.drawLogo: ' + 
+      showTag + ', ' + showProgress + ', ' + progressPct); }
 
     // create canvas and get its context
-    $($canvas).appendTo($canvasBox);
+    $($canvasBox).html($canvas);
     ctx = $canvas.getContext('2d');
           
     // General text properties for arc logo
@@ -59,6 +67,17 @@ mikeycell.logo = (function () {
     ctx.fillText(textSpade, width / 2, (height / 5) * 3 );
     ctx.restore();
     
+    // If we want a progress bar
+    if (showProgress) {
+      showTag = false;  // don't show the tagline, progress bar is there
+      if (progressPct && parseInt(progressPct) > 0) {
+        progressBarCurrentWidth = progressBar1PctWidth * parseInt(progressPct);
+      ctx.beginPath();
+      ctx.rect(width / 4, height - fontSizePixels, progressBarCurrentWidth, 5);
+      ctx.fill();
+      }
+    }
+    
     // tagline below if requested
     if (showTag) {
       ctx.font = "" + (fontSizePixels / 1.95) + "px cboxregular";
@@ -66,6 +85,7 @@ mikeycell.logo = (function () {
       ctx.fillText(textTag, width / 2, height - fontSizePixels);
       ctx.restore();
     }
+    
   }
   
   return { drawLogo : drawLogo };

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MikeyCell Play Test</title>
+  <!-- Mikey Micheletti, for Gameplay course -->
+  <style>
+    h1 { font-size: 1em; margin: 1%; }
+    .Red { color: red; }
+    .Black { color: black; }
+    .tableau { 
+      float: left; 
+      width: 8%;
+      margin: 1%; 
+      display: inline-block;
+      height: 13em;
+      border: 1px solid #666; 
+      padding: 0.5em;
+    }
+    .cell, .foundation {
+     float: left;
+     width: 8%;
+     margin: 1%;
+     display: inline-block;
+     height: 2em;
+     border: 1px solid #666;
+     padding: 0.5em; 
+    }
+    .boxlabel {
+      float: left;
+      width: 10%;
+      margin: 0 1% 1% 1%;
+      padding: 0;
+      display: inline-block;
+    }
+    #thetableaux { clear: both; }
+    fieldset {
+     float: left;
+     width: 20%;
+     margin: 1%; 
+    }
+  </style>
+  <script src="../scripts/playingcards.js"></script>
+  <script src="../scripts/gamemodel.js"></script>
+  
+</head>
+<body>
+
+  <h1>MikeyCell Play Test</h1>
+  <!-- Cells -->
+  <div id="thecells">
+  <div id="c1" class="cell"></div>
+  <div id="c2" class="cell"></div>
+  <div id="c3" class="cell"></div>
+  <div id="c4" class="cell"></div>
+  </div>
+  
+  <!-- Foundations -->
+  <div id="thefoundations">
+  <div id="f1" class="foundation"></div>  
+  <div id="f2" class="foundation"></div>  
+  <div id="f3" class="foundation"></div>  
+  <div id="f4" class="foundation"></div> 
+  </div> 
+
+  <!-- labels -->
+  <div class="boxlabel">Cell 1</div>
+  <div class="boxlabel">Cell 2</div>
+  <div class="boxlabel">Cell 3</div>
+  <div class="boxlabel">Cell 4</div>
+  <div class="boxlabel">Foundation 1</div>
+  <div class="boxlabel">Foundation 2</div>
+  <div class="boxlabel">Foundation 3</div>
+  <div class="boxlabel">Foundation 4</div>
+  
+  <!-- Tableau -->
+  <div id="thetableaux">
+  <div id="t1" class="tableau"></div>
+  <div id="t2" class="tableau"></div>
+  <div id="t3" class="tableau"></div>
+  <div id="t4" class="tableau"></div>
+  <div id="t5" class="tableau"></div>
+  <div id="t6" class="tableau"></div>
+  <div id="t7" class="tableau"></div>
+  <div id="t8" class="tableau"></div>
+  </div>
+
+  <div class="boxlabel">Tableau 1</div>
+  <div class="boxlabel">Tableau 2</div>
+  <div class="boxlabel">Tableau 3</div>
+  <div class="boxlabel">Tableau 4</div>
+  <div class="boxlabel">Tableau 5</div>
+  <div class="boxlabel">Tableau 6</div>
+  <div class="boxlabel">Tableau 7</div>
+  <div class="boxlabel">Tableau 8</div>
+  
+  <!-- Gameplay test form -->
+  <form name="play">
+  
+    <fieldset>
+      <legend>Move from</legend>
+      <input type="radio" name="movefrom" id="FromC1" value="1" >Cell 1<br> <!-- that.CELL1 -->
+      <input type="radio" name="movefrom" id="FromC2" value="2" >Cell 2<br> <!-- that.CELL2 -->
+      <input type="radio" name="movefrom" id="FromC3" value="3" >Cell 3<br> <!-- that.CELL3 -->
+      <input type="radio" name="movefrom" id="FromC4" value="4" >Cell 4<br><br> <!-- that.CELL4 -->
+      
+      <input type="radio" name="movefrom" id="FromT1" value="9" >Tableau 1<br> <!-- that.TABLEAU1 -->
+      <input type="radio" name="movefrom" id="FromT2" value="10">Tableau 2<br> <!-- that.TABLEAU2 -->
+      <input type="radio" name="movefrom" id="FromT3" value="11">Tableau 3<br> <!-- that.TABLEAU3 -->
+      <input type="radio" name="movefrom" id="FromT4" value="12">Tableau 4<br> <!-- that.TABLEAU4 -->
+      <input type="radio" name="movefrom" id="FromT5" value="13">Tableau 5<br> <!-- that.TABLEAU5 -->
+      <input type="radio" name="movefrom" id="FromT6" value="14">Tableau 6<br> <!-- that.TABLEAU6 -->
+      <input type="radio" name="movefrom" id="FromT7" value="15">Tableau 7<br> <!-- that.TABLEAU7 -->
+      <input type="radio" name="movefrom" id="FromT8" value="16">Tableau 8 <!-- that.TABLEAU8 -->
+    </fieldset>
+    
+    <fieldset>
+      <legend>Move to</legend>
+      <input type="radio" name="moveto"id="ToC1" value="1" >Cell 1 &nbsp; <!-- that.CELL1 -->
+      <input type="radio" name="moveto" id="ToF1" value="5" >Foundation 1<br> <!-- that.FOUNDATION1 -->
+      <input type="radio" name="moveto"id="ToC2" value="2" >Cell 2 &nbsp; <!-- that.CELL2 -->
+      <input type="radio" name="moveto" id="ToF2" value="6" >Foundation 2<br> <!-- that.FOUNDATION2 -->
+      <input type="radio" name="moveto"id="ToC3" value="3" >Cell 3 &nbsp; <!-- that.CELL3 -->
+      <input type="radio" name="moveto" id="ToF3" value="7" >Foundation 3<br> <!-- that.FOUNDATION3 -->
+      <input type="radio" name="moveto"id="ToC4" value="4" >Cell 4 &nbsp; <!-- that.CELL4 -->
+      <input type="radio" name="moveto" id="ToF4" value="8" >Foundation 4<br><br> <!-- that.FOUNDATION4 -->
+
+      <input type="radio" name="moveto" id="ToT1" value="9" >Tableau 1<br> <!-- that.TABLEAU1 -->
+      <input type="radio" name="moveto" id="ToT2" value="10">Tableau 2<br> <!-- that.TABLEAU2 -->
+      <input type="radio" name="moveto" id="ToT3" value="11">Tableau 3<br> <!-- that.TABLEAU3 -->
+      <input type="radio" name="moveto" id="ToT4" value="12">Tableau 4<br> <!-- that.TABLEAU4 -->
+      <input type="radio" name="moveto" id="ToT5" value="13">Tableau 5<br> <!-- that.TABLEAU5 -->
+      <input type="radio" name="moveto" id="ToT6" value="14">Tableau 6<br> <!-- that.TABLEAU6 -->
+      <input type="radio" name="moveto" id="ToT7" value="15">Tableau 7<br> <!-- that.TABLEAU7 -->
+      <input type="radio" name="moveto" id="ToT8" value="16">Tableau 8 <!-- that.TABLEAU8 -->
+    </fieldset>
+    
+    <fieldset>
+      <legend>Game Controls</legend>
+      <label for="message">Message:</label>
+      <input type="text" id="message" value="">
+      <br><br>
+      <button id="makemove" type="button">Make Move</button>
+    </fieldset>
+    
+    <fieldset>
+      <legend>Start New Game</legend>
+      <button id="newgame" type="button">New Game</button><br><br>
+      <button id="monitortest" type="button">Test the monitor</button>
+    </fieldset>
+  </form>
+  
+  <script>
+  
+  // Test game model by playing clumsy game
+  (function () {
+    var getById = function (id) { return document.getElementById(id); },
+        getByName = function (name) { return document.getElementsByName(name); },
+        c1 = getById("c1"),
+        c2 = getById("c2"),
+        c3 = getById("c3"),
+        c4 = getById("c4"),
+        f1 = getById("f1"),
+        f2 = getById("f2"),
+        f3 = getById("f3"),
+        f4 = getById("f4"),
+        t1 = getById("t1"),
+        t2 = getById("t2"),
+        t3 = getById("t3"),
+        t4 = getById("t4"),
+        t5 = getById("t5"),
+        t6 = getById("t6"),
+        t7 = getById("t7"),
+        t8 = getById("t8"),
+        makemove = getById("makemove"),
+        newgame = getById("newgame"),
+        message = getById("message"),
+        m = app.Model,
+        numCards = app.cards.CARDS_IN_DECK,
+        i, 
+        t, 
+        // essentially a 1-based array (tabs[1] = m.TABLEAU1)
+        tabs = [0, m.TABLEAU1, m.TABLEAU2, m.TABLEAU3, m.TABLEAU4, 
+                m.TABLEAU5, m.TABLEAU6, m.TABLEAU7, m.TABLEAU8],
+        locs = [
+               0, 'Cell 1', 'Cell 2', 'Cell 3', 'Cell 4',
+               'Found 1', 'Found 2', 'Found 3', 'Found 4',
+               'Tab 1', 'Tab 2', 'Tab 3', 'Tab 4', 'Tab 5', 'Tab 6', 'Tab 7', 'Tab 8'
+                ];
+      
+    // Clear everything, shuffle deck, ready to play  
+    newgame.onclick = function() {
+      var t;
+      clearEverything();
+      m.Deck = app.cards.newDeck(true); // sorted
+      m.Tableau.sortInto(m.Deck);
+      for (t = 1; t < tabs.length; t++) {
+        refreshTableauDisplay(t);
+      }
+      checkForAutoMove();
+    };
+
+    // Arrange the deck to make monitor testing easier  
+    monitortest.onclick = function() {
+      var t,
+          d,
+          a;
+      clearEverything();
+      d = m.Deck = app.cards.newDeck(); // w/o arg returns cards in order: m.Deck[0] = Ace of Diamonds
+      a = [
+          d[12], d[6], d[25], d[19], d[38], d[32], d[51], d[45],
+          d[11], d[5], d[24], d[18], d[37], d[31], d[50], d[44],
+          d[10], d[4], d[23], d[17], d[36], d[30], d[49], d[43],
+          d[9],  d[3], d[22], d[16], d[35], d[29], d[48], d[42],
+          d[8],  d[2], d[21], d[15], d[34], d[28], d[47], d[41],
+          d[7],  d[1], d[20], d[14], d[33], d[27], d[46], d[40],
+          d[0],  d[13], d[26], d[39]
+          ];
+      m.Tableau.sortInto(a);
+      for (t = 1; t < tabs.length; t++) {
+        refreshTableauDisplay(t);
+      }
+      checkForAutoMove();
+    };
+      
+    // Refresh display of a specific tableau after shuffle or move
+    function refreshTableauDisplay(tabNumber) {
+      var i,
+          theTableau,
+          theCard,
+          cardDisplay = "",
+          tabDiv = getById('t' + tabNumber);
+      tabDiv.innerHTML = "";
+      for (i = 0; i < m.Tableau[tabs[tabNumber]].length; i++) {
+        theTableau = m.Tableau[tabs[tabNumber]];
+        theCard = theTableau[i];
+        cardDisplay = getCardDisplay(theCard);
+        tabDiv.innerHTML += cardDisplay;
+      }
+    };
+    
+    // Convenience method to get the selected radio button in a group
+    function selectedRadioButton(radioName) {   
+      var group = getByName(radioName),
+          i;
+      for ( i = 0; i < group.length; i++) {
+        if (group.item(i).checked) {
+          return group.item(i).id;
+        }
+      }
+      return null; // if not found/checked
+    };
+    
+    // Convenience for displaying a card
+    function getCardDisplay(card) {
+      if (!card.rank) {
+        return m.EMPTY;
+      } else {
+        return display = '<div id="' + card.id +
+                      '" class="' + card.suitColor +
+                      '">' + card.getShortString() + '</div>';
+      }
+    }
+    
+    // refreshes one area of the display to match the model
+    function refreshDisplay(toRefresh) {
+      switch (toRefresh) {
+        case m.CELL1:
+          c1.innerHTML = getCardDisplay(m.Cells[toRefresh]);
+          break;
+        case m.CELL2:
+          c2.innerHTML = getCardDisplay(m.Cells[toRefresh]);
+          break;
+        case m.CELL3:
+          c3.innerHTML = getCardDisplay(m.Cells[toRefresh]);
+          break;
+        case m.CELL4:
+          c4.innerHTML = getCardDisplay(m.Cells[toRefresh]);
+          break;
+        case m.TABLEAU1:
+          refreshTableauDisplay(1);
+          break;
+        case m.TABLEAU2:
+          refreshTableauDisplay(2);
+          break;
+        case m.TABLEAU3:
+          refreshTableauDisplay(3);
+          break;
+        case m.TABLEAU4:
+          refreshTableauDisplay(4);
+          break;
+        case m.TABLEAU5:
+          refreshTableauDisplay(5);
+          break;
+        case m.TABLEAU6:
+          refreshTableauDisplay(6);
+          break;
+        case m.TABLEAU7:
+          refreshTableauDisplay(7);
+          break;
+        case m.TABLEAU8:
+          refreshTableauDisplay(8);
+          break;
+        case m.FOUNDATION1:
+          f1.innerHTML = getCardDisplay(m.getCardAt(toRefresh));
+          break;
+        case m.FOUNDATION2:
+          f2.innerHTML = getCardDisplay(m.getCardAt(toRefresh));
+          break;
+        case m.FOUNDATION3:
+          f3.innerHTML = getCardDisplay(m.getCardAt(toRefresh));
+          break;
+        case m.FOUNDATION4:
+          f4.innerHTML = getCardDisplay(m.getCardAt(toRefresh));
+          break;
+        // no default case
+      }
+    };
+    
+    // Checks for a safe automatic move, makes it after a short delay
+    function checkForAutoMove() {
+      setTimeout ( function() {
+        var a = m.autoMove();
+        if (a) {
+          if (a === m.WINNER ) {
+            message.value = 'YOU WON THE GAME!';
+          } else {
+            makeAMove(a[0], a[1]);
+          }
+        }
+      }, 1000);
+    }
+    
+    // Handles display moves, may be called manually or via a monitor
+    function makeAMove(fromInt, toInt) {
+      var fromCard,
+          toCard;
+
+      if (fromInt && toInt) {
+        fromCard = m.getCardAt(fromInt);
+        toCard = m.getCardAt(toInt);
+        
+        if (toInt >= m.CELL1 && toInt <= m.CELL4) {
+          // moving to a cell
+          if (m.Cells.place(fromCard, toInt)) {
+            refreshDisplay(fromInt);
+            refreshDisplay(toInt);
+            message.value = locs[fromInt] + ' to ' + locs[toInt]  + '...OK';
+            checkForAutoMove();
+            return;
+          }
+        } else if (toInt >= m.TABLEAU1 && toInt <= m.TABLEAU8) {
+          // moving to a tableau
+          if (m.Tableau.place(fromCard, toInt)) {
+            refreshDisplay(fromInt);
+            refreshDisplay(toInt);
+            message.value = locs[fromInt] + ' to ' + locs[toInt]  + '...OK';
+            checkForAutoMove();
+            return;
+          }
+        } else if (toInt >= m.FOUNDATION1 && toInt <= m.FOUNDATION4) {
+          if (m.Foundations.place(fromCard, toInt)) {
+            refreshDisplay(fromInt);
+            refreshDisplay(toInt);
+            message.value = locs[fromInt] + ' to ' + locs[toInt]  + '...OK';
+            checkForAutoMove();
+            return;
+          }
+        }
+        
+        // don't cheat dude
+            message.value = locs[fromInt] + ' to ' + locs[toInt]  + '...ILLEGAL';
+      }      
+    };
+    
+    // Click handler for the Make Move button  
+    // Drag and drop might have been easier sheesh  
+    makemove.onclick = function() {
+      var fromId = selectedRadioButton('movefrom'),
+          toId = selectedRadioButton('moveto'),
+          fromInt = parseInt(getById(fromId).value),
+          toInt = parseInt(getById(toId).value);
+          
+      makeAMove(fromInt, toInt);      
+    };
+    
+    // Initialize the game and screen display
+    function clearEverything() {
+      var fromRadios = getByName('movefrom'),
+          toRadios = getByName('moveto'),
+          message = getById('message'),
+          i;
+      c1.innerHTML = "";
+      c2.innerHTML = "";
+      c3.innerHTML = "";
+      c4.innerHTML = "";
+      f1.innerHTML = "";
+      f2.innerHTML = "";
+      f3.innerHTML = "";
+      f4.innerHTML = "";
+      t1.innerHTML = "";
+      t2.innerHTML = "";
+      t3.innerHTML = "";
+      t4.innerHTML = "";
+      t5.innerHTML = "";
+      t6.innerHTML = "";
+      t7.innerHTML = "";
+      t8.innerHTML = "";
+      for (i = 0; i < fromRadios.length; i++) {
+        fromRadios.item(i).checked = false;
+      }
+      for (i = 0; i < toRadios.length; i++) {
+        toRadios.item(i).checked = false;
+      }
+      message.value = "";
+    }
+    
+    // Initialize at startup...
+    clearEverything();
+            
+  })();
+  </script>
+
+</body>
+</html>
