@@ -31,7 +31,7 @@ mikeycell.pattern = (function () {
     ctx.lineTo( 7,  0); // back to top
     
     ctx.lineWidth = 0.5;
-    ctx.strokeStyle = "rgba(0,0,0, 0.9)";
+    ctx.strokeStyle = "rgba(0,0,0, 0.95)";
     ctx.closePath();
     ctx.stroke();
     
@@ -40,16 +40,28 @@ mikeycell.pattern = (function () {
   
   // creates a canvas with a faint diamond pattern behind other elements on the page
   function drawDiamondPatternBackground($canvasBox) {
-    var $canvas = $("<canvas id='patternBkgdCanvas'>MikeyCell</canvas>")[0], // create a canvas
-        width = $canvas.width = $canvasBox.width(), // as wide as container
-        height = $canvas.height = $canvasBox.height(), // as tall as container
-        $patternElement = drawSinglePatternElement(), // canvas we'll repeat
-        ctx, // large background canvas context
-        pattern; // pattern we'll create
+    var width = $canvasBox.width(),      // width of containing element
+        height = $canvasBox.height(),    // height of containing element
+        $canvas,                        // canvas element we'll create if space permits
+        $patternElement,                // single diamond in the pattern
+        ctx,                            // 2D canvas context
+        pattern;                        // overall pattern
+        
         
     if (m.debug === m.DEBUGALL) { console.log('pattern.drawDiamondPatternBackground'); }
 
-    // create canvas and get its context
+    // Only create the canvas and pattern if it's being shown. Omitted on smaller devices.
+    // 750 pixel threshold set in CSS
+    if (width <= 750) {
+      return;
+    }
+    
+    // still here? then draw the pattern
+    $canvas = $("<canvas id='patternBkgdCanvas'>MikeyCell</canvas>")[0]; // create a canvas
+    $canvas.width = width; // as wide as container
+    $canvas.height = height; // as tall as container
+    $patternElement = drawSinglePatternElement(); // single element in a canvas we'll repeat
+
     ctx = $canvas.getContext('2d');
     pattern = ctx.createPattern($patternElement, 'repeat');
     ctx.fillStyle = pattern;

@@ -35,8 +35,7 @@ mikeycell.screens = (function () {
     // draw background pattern behind other elements, redraw after resizing
     // aka 'the hard way'
     m.pattern.drawDiamondPatternBackground( $('body') );
-    $(window)
-      .resize(function (event) {
+    $(window).on('resize orientationchange', function (event) {
         $('#patternBkgdCanvas').remove();
         m.pattern.drawDiamondPatternBackground( $('body') );
       }
@@ -59,13 +58,15 @@ mikeycell.screens.splashScreen = (function () {
   
   // Initialize splash screen if needed
   function run (showTagLine, showProgress, progressPct) {    
-    var $canvasBox = $('#splashLogoBox');
+    var $canvasBox = $('#splashLogoBox'),
+        fillBrightness = $canvasBox.width() < 420 ? 1 : 0;
   
     if (m.debug > m.NODEBUG) { console.log('screens.splashScreen.run'); }
     
     // Draws logo on the splash screen. Will be called from the loader multiple
     // times to display progress, and then to display the tagline when finished loading.
-    mikeycell.logo.drawLogo($canvasBox, showTagLine, showProgress, progressPct);
+    // Brighter color for smaller screens
+    mikeycell.logo.drawLogo($canvasBox, showTagLine, showProgress, progressPct, fillBrightness);
   
     // Setup the click handler and pointer styling for the splash screen only after loading.  
     if (showTagLine) {
@@ -95,9 +96,9 @@ mikeycell.screens.menuScreen = (function () {
 
     // one-time initialization
     if (needsInit) {
-      // draw logo, in timeout to permit webfont to load in safari / chrome
+      // draw logo
       var $canvasBox = $('#menuLogoBox');
-      m.logo.drawLogo($canvasBox, false);
+      m.logo.drawLogo($canvasBox, false, 0, 0, 0);
       
       $('#menuScreen button')
         // navigate to the screen stored in the button's data
@@ -111,11 +112,17 @@ mikeycell.screens.menuScreen = (function () {
       $(window)
         .resize(function (event) {
           $canvasBox.empty();
-          m.logo.drawLogo($canvasBox, false);
+          m.logo.drawLogo($canvasBox, false, 0, 0, 0);
         }
       );
     }
     needsInit = false;
+    
+    // Turn off game loop and mouse event handling in game screen
+    m.gameloop.setLoopFunction(null);
+    m.playtouch.unhookMouseEvents();
+    
+    
   }
   return { run: run };
   
@@ -135,7 +142,7 @@ mikeycell.screens.aboutScreen = (function () {
     if (needsInit) {
       // draw logo
       var $canvasBox = $('#aboutLogoBox');
-      m.logo.drawLogo($canvasBox, false);
+      m.logo.drawLogo($canvasBox, false, 0, 0, 0);
 
       $('#aboutMenuButton')
         // navigate to the screen stored in the button's data
@@ -149,7 +156,7 @@ mikeycell.screens.aboutScreen = (function () {
       $(window)
         .resize(function (event) {
           $canvasBox.empty();
-          m.logo.drawLogo($canvasBox, false);
+          m.logo.drawLogo($canvasBox, false, 0, 0, 0);
         }
       );
     }
@@ -173,7 +180,7 @@ mikeycell.screens.settingsScreen = (function () {
     if (needsInit) {
       // draw logo
       var $canvasBox = $('#settingsLogoBox');
-      m.logo.drawLogo($canvasBox, false);
+      m.logo.drawLogo($canvasBox, false, 0, 0, 0);
       
       // just this one button for now, probably more later
       // may want to move this to a separate file if it gets too big
@@ -189,7 +196,7 @@ mikeycell.screens.settingsScreen = (function () {
       $(window)
         .resize(function (event) {
           $canvasBox.empty();
-          m.logo.drawLogo($canvasBox, false);
+          m.logo.drawLogo($canvasBox, false, 0, 0, 0);
         }
       );
     }
@@ -211,35 +218,39 @@ mikeycell.screens.gameScreen = (function () {
 
     if (m.debug > m.NODEBUG) { console.log('screens.gameScreen.run'); }
     
-    // menu/logo one-time initialization
     if (needsInit) {
-      // draw logo
+      
+      // disable mouse events on canvas and halt the game loop when we return to the menu
       $('#gameMenuLink')
         .click( function (event) {
+          m.playtouch.unhookMouseEvents();
           m.screens.showScreen('menuScreen');
-        }
-      );
+      });
       
+      // shuffle and deal if we ask nicely
       $('#newGameLink')
         .click( function (event) {
           m.screens.showScreen('gameScreen');
-        }
-      );
+      });
       
     }
     needsInit = false;
     
+    // start the game animation loop
+    m.gameloop.setLoopFunction(m.view.refreshDisplay);
+    
     // start a new game
     m.view.newGame($('#gameViewBox'));
-
-    // if using character form, initialize it
-    if (m.showPlayForm) {
-      $('#charPlayForm').css('display', 'block');
-      $('#theCard').val('');
-      $('#theDest').val('');
-      $('#theResult').val('');
-    }
     
+    // hook up event handling
+    m.playtouch.hookMouseEvents();    
+
+    // resize the game pane if needed
+    $(window)
+      .resize(function (event) {
+        m.view.setMetrics();
+    });
+
   }
   return { run: run };
   

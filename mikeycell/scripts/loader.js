@@ -6,9 +6,13 @@ var mikeycell = mikeycell || { };
 
 mikeycell.NODEBUG = 0;    // console logging off
 mikeycell.DEBUGSOME = 1;  // console logging of top-level code
-mikeycell.DEBUGALL = 2;    // console logging of detail methods and loops
+mikeycell.DEBUGALL = 2;   // console logging of detail methods and loops
+mikeycell.DEBUGCRAZY = 3; // console logging of every last nutso thing
 
 mikeycell.debug = mikeycell.DEBUGALL; // current debugging level
+
+console = window.console || { log: function() {} }; // ie console.log polyfill
+
 mikeycell.showPlayForm = true; // character-based play
 
 // Loader property of the global object, used to initialize scripts
@@ -115,7 +119,8 @@ mikeycell.loader = (function () {
                'scripts/playingcards.js',
                'scripts/gamemodel.js',
                'scripts/gameviewcanvas.js',
-							 'scripts/playform.js'],
+               'scripts/gameloop.js',
+               'scripts/playtouch.js'], // TODO remove after mouse solid
         complete: function () {
           // display splash screen at startup, defined in screens.js
           mikeycell.screens.start();

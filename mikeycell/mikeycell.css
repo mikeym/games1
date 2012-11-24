@@ -45,7 +45,7 @@ body {
 #game {
   position: relative;
   width: 1014px;
-  min-height: 700px;
+  height: 700px;
   margin: 3% auto;
   font: 20px cboxregular, "Times New Roman", Times, Georgia, serif;
   color: rgb(140,59,29);
@@ -194,9 +194,16 @@ li {
   font-size: 0.85em;
   line-height: 1.25em;
   text-shadow: none;
+  margin: 0.75em 0.5em;
 }
+#aboutScreen cite a { 
+  cursor: pointer; 
+  color: rgb(140,59,29);
+  text-decoration: underline;
+}
+
 #aboutText { 
-  margin: 0 1em; 
+  margin: 1em; 
   position: relative;
   top: -120px;
 }
@@ -210,7 +217,7 @@ li {
 #gameScreenMenu {
   height: 20px;
   position: absolute;
-  top: -7px;
+  top: -14px;
   right: 0px;
   display: block;
   z-index: 20;
@@ -221,106 +228,405 @@ li {
   cursor: pointer; 
   margin: 0 30px 0 35px;
   font-size: 18px;
+  color: #C95D37;
 }
 #gameScreenMenu a:hover,
-#gameScreenMenu a:active { border-bottom: 1px solid rgb(140,59,29); }
+#gameScreenMenu a:active { border-bottom: 1px solid #C95D37; }
 
 /* Game play canvas lives here, default to large view */
-#gameViewBox {
-  height: 1000px;
-  width: 1014px;
+#gameViewBox, #gameCanvas {
+  width: 1014px; /* 1014px default large width */
+  height: 700px; /* 700px default large height */
+  margin-top: 0;
+  cursor: pointer;
 }
 
-/* Game play form, interim */
-#charPlayForm {
-  position: relative;
-  top: -290px; 
-  display: none;
-}
-#charPlayForm input,
-#charPlayForm button { margin-right: 20px; }
-
-/* mobile views, the curved logo is painful to scale */
-
-@media (max-width: 700px) {
-  #game {
-    width: 95%;
-    height: 95%;
-    margin: 1% auto;
-    font-size: 18px;
+/* 95% mobile view, (reducing game screen in 5% increments from default 1014 x 700 size) */
+@media (max-width: 1050px) {
+  body { font-size: 19px; }
+  #game, #gameViewBox, #gameCanvas {
+    width: 963.3px;
+    height: 665px;  
   }
-  
-  /* splash screen logo */
-  #splashLogoBox { width: 550px; height: 550px; }
-  
-  /* menu, settings and about screen logos and control adjustments */
-  #menuLogoBox,
-  #settingsLogoBox,
-  #aboutLogoBox { width: 200px; height: 200px; }
-  #aboutText,
-  #aboutScreen button,
-  #settingsText,
-  #settingsScreen button,
-  menu { top: -60px; }
-  
-  #menuScreen button { margin-left: 0; } 
+  .contentWrapper {
+    width: 17.5em;
+    height: 22.5em; 
+  }
+  #splashLogoBox {
+    width: 570px;
+    height: 570px; 
+  }
+  #menuLogoBox, #settingsLogoBox, #aboutLogoBox {
+    width: 285px;
+    height: 285px; 
+  }
+  #menuScreen menu {
+    top: -115px;
+    left: -2.5em; 
+  } 
+  #gameScreenMenu a { 
+    font-size: 17px; 
+    margin: 0 30px 0 25px;  
+  }
 }
 
-@media (max-width: 600px) {
-  #game { font-size: 16px; }
-  
-  /* splash screen */
-  #splashLogoBox { width: 500px; height: 500px; }
-  
-  /* menu, settings and about screen logos and control adjustments */
-  #menuLogoBox,
-  #settingsLogoBox,
-  #aboutLogoBox { width: 180px; height: 180px; }
-  #aboutText,
-  #aboutScreen button,
-  #settingsText,
-  #settingsScreen button,
-  menu { top: -50px; }
-  
-  #menuScreen button { margin-left: -0.5em; } 
+/* 90% */
+@media (max-width: 1000px) {
+  body { font-size: 18px; }
+  #game, #gameViewBox, #gameCanvas {
+    width: 912.6px;
+    height: 630px;  
+  }
+  .contentWrapper {
+    width: 17em;
+    height: 22em; 
+  }
+  #splashLogoBox {
+    width: 540px;
+    height: 540px; 
+  }
+  #menuLogoBox, #settingsLogoBox, #aboutLogoBox {
+    width: 270px;
+    height: 270px; 
+  }  
+  #menuScreen menu {
+    top: -110px;
+    left: -2.5em; 
+  } 
+  #menuScreen button {
+    width: 12em;
+    margin: 0.5em;  
+  }
+  #gameScreenMenu a { 
+    font-size: 16.5px; 
+     margin: 0 27px 0 25px;  
+ }
 }
 
-@media (max-width: 500px) {
-  #game {
-    width: 100%;
+/* 85% */
+@media (max-width: 950px) {
+  body { font-size: 17px; }
+  button { font-size: 1em; }
+  #game, #gameViewBox, #gameCanvas {
+    width: 861.9px;
+    height: 595px; 
+  }
+  .contentWrapper {
+    width: 16.5em;
+    height: 21em; 
+    margin: 4% auto;
+  }
+  #splashLogoBox {
+    width: 510px;
+    height: 510px; 
+  }
+  #menuLogoBox, #settingsLogoBox, #aboutLogoBox {
+    width: 255px;
+    height: 255px; 
+  } 
+  #gameScreenMenu { top: -15px; } 
+  #gameScreenMenu a { 
+    font-size: 16.5px; 
+     margin: 0 25px 0 20px;  
+ }
+  #aboutScreen p, #aboutScreen cite { 
+    line-height: 1.25em; 
+  }
+  #aboutText { 
+    margin: 0.75em; 
+    top: -105px;
+  }
+  #aboutScreen button {
+    height: 2.25em;
+    top: -105px;
+  }
+}
+
+/* 80% */
+@media (max-width: 900px) {
+  body { font-size: 16.5px; }
+  #game, #gameViewBox, #gameCanvas {
+    width: 811.2px;
+    height: 560px; 
+  }
+  .contentWrapper {
+    width: 16em;
+    height: 20em; 
+    margin: 3.5% auto;
+  }
+  #splashLogoBox {
+    width: 480px;
+    height: 480px; 
+  }
+  #menuLogoBox, #settingsLogoBox, #aboutLogoBox {
+    width: 225px;
+    height: 225px; 
+  }  
+  #menuScreen menu {
+    top: -95px;
+    left: -2.5em; 
+  } 
+  #menuScreen button {
+    width: 11.5em;
+    height: 2.25em;
+    margin: 0.5em;  
+  }
+  #gameScreenMenu { top: -17px; } 
+  #gameScreenMenu a { 
+    font-size: 16px; 
+     margin: 0 25px 0 15px;  
+ }
+  #aboutScreen p, #aboutScreen cite { 
+    line-height: 1.15em; 
+  }
+  #aboutText { 
+    margin: 0.5em; 
+    top: -85px;
+  }
+  #aboutScreen button {
+    top: -85px;
+  }
+}
+
+/* 75% */
+@media (max-width: 850px) {
+  body { font-size: 16px; }
+  #game, #gameViewBox, #gameCanvas {
+    width: 760.5px;
+    height: 525px; 
+  }
+  #game { margin: 2% auto; }
+  .contentWrapper {
+    margin: 2.5% auto;
+  }
+  #splashLogoBox {
+    width: 450px;
+    height: 450px; 
+  }
+  #menuLogoBox, #settingsLogoBox, #aboutLogoBox {
+    width: 200px;
+    height: 200px; 
+  }  
+  #menuScreen menu {
+    top: -80px;
+    left: -2.5em; 
+  } 
+  #menuScreen button {
+    width: 11.5em;
+    height: 2.25em;
+    margin: 0.5em;  
+  }
+  #gameScreenMenu { top: -19px; } 
+  #gameScreenMenu a { 
+    font-size: 15px; 
+     margin: 0 25px 0 15px;  
+ }
+  #aboutScreen p, #aboutScreen cite { 
+    line-height: 1.15em; 
+  }
+  #aboutText { 
+    margin: 0.5em; 
+    top: -75px;
+  }
+  #aboutScreen button {
+    top: -75px;
+  }
+}
+
+/* 70% */
+@media (max-width: 800px) {
+  body { font-size: 15.5px; }
+  #game, #gameViewBox, #gameCanvas {
+    width: 709px;
+    height: 490px; 
+  }
+  #game { margin: 1% auto; }
+  #gameViewBox { margin-top: 5px; }
+  .contentWrapper {
+    width: 16em;
+    height: 19em; 
+    margin: 3.5% auto;
+  }
+  #splashLogoBox {
+    width: 420px;
+    height: 420px; 
+  }
+  #menuLogoBox, #settingsLogoBox, #aboutLogoBox {
+    width: 190px;
+    height: 190px; 
+  }  
+  #menuScreen menu {
+    top: -80px;
+    left: -2.5em; 
+  } 
+  #menuScreen button {
+    width: 11.5em;
+    height: 2.25em;
+    margin: 0.5em;  
+  }
+  #gameScreenMenu { top: -19px; } 
+  #gameScreenMenu a { 
+    font-size: 14px; 
+     margin: 0 20px 0 15px;  
+ }
+  #aboutScreen p, #aboutScreen cite { 
+    line-height: 1.15em; 
+  }
+}
+
+/* 70% card size still, but lose the black patterned background, border, box shadow */
+@media (max-width: 750px) {
+  body { 
+    font-size: 15.5px; 
+    background-color: rgb(40,65,23);
+  }
+  #patternBkgdCanvas { display: none; }
+  #gameViewBox, #gameCanvas {
+    width: 709px;
+    height: 490px; 
+  }
+  #game { 
+    margin: 15px auto 0 auto;
     height: 100%;
-    margin: 0;
-    border: 0;
-    font-size: 14px;
-    text-shadow: none;
-    -webkit-border-radius: 0;    
+    width: 100%;
+    border: 0; 
+    -webkit-border-radius: 0;
     border-radius: 0;
     -webkit-box-shadow: none;
     box-shadow: none;
   }
-  
-  /* splash screen */
-  #splashLogoBox { width: 425px; height: 425px; }
-  
-  /* menu, settings and about screen logos and control adjustments */
-  #menuLogoBox,
-  #settingsLogoBox,
-  #aboutLogoBox { width: 170px; height: 170px; }
-  #aboutText,
-  #aboutScreen button,
-  #settingsText,
-  #settingsScreen button,
-  menu { top: -50px; }
-  
-  #menuScreen button { margin-left: -1em; } 
+  #gameScreenMenu { top: -30px; } 
 }
 
+/* 65% */
+@media (max-width: 700px) {
+  body { font-size: 15px; }
+  #gameViewBox, #gameCanvas {
+    width: 659.1px;
+    height: 455px; 
+  }
+  .contentWrapper {
+    width: 13em;
+    height: 15em; 
+    margin: 1.5% auto;
+  }
+  #splashLogoBox {
+    width: 390px;
+    height: 390px; 
+  }
+  #menuLogoBox, #settingsLogoBox, #aboutLogoBox {
+    width: 150px;
+    height: 150px; 
+  }  
+  #menuScreen menu {
+    top: -50px;
+    left: -2.5em; 
+  } 
+  #menuScreen button {
+    font-size: .80em;
+    width: 11.5em;
+    height: 2em;
+  }
+  #gameScreenMenu a { 
+    font-size: 13.5px; 
+  }
+  #aboutText {
+    top: -50px;
+  }
+  #aboutScreen p, #aboutScreen cite {
+    font-size: 13px;
+  }
+  #aboutScreen button {
+    font-size: .80em; 
+    height: 2em; 
+    top: -45px;
+  }
+}
+
+/* 60% */
+@media (max-width: 650px) {
+  #gameViewBox, #gameCanvas {
+    width: 608.4px;
+    height: 420px; 
+  }
+  #splashLogoBox {
+    width: 360px;
+    height: 360px; 
+  }
+  #gameScreenMenu a { 
+    margin: 0 15px; 
+ }
+}
+
+/* 55% */
+@media (max-width: 600px) {
+  #gameViewBox, #gameCanvas {
+    width: 557.7px;
+    height: 385px; 
+  }
+  #splashLogoBox {
+    width: 330px;
+    height: 330px; 
+  }
+}
+
+/* 50% */
+@media (max-width: 550px) {
+  #gameViewBox, #gameCanvas {
+    width: 507px;
+    height: 350px; 
+  }
+  #splashLogoBox {
+    width: 300px;
+    height: 300px; 
+  }
+}
+
+/* 45% */
+@media (max-width: 500px) {
+  #gameViewBox, #gameCanvas {
+    width: 456.3px;
+    height: 315px; 
+  }
+  #splashLogoBox {
+    width: 270px;
+    height: 270px; 
+  }
+}
+
+/* 40% */
 @media (max-width: 450px) {
-  /* splash screen */
-  #splashLogoBox { width: 375px; height: 375px; }  
+  #gameViewBox, #gameCanvas {
+    width: 405.6px;
+    height: 280px; 
+  }
+  #splashLogoBox {
+    width: 240px;
+    height: 240px; 
+  }
 }
 
-@media (max-width: 320px) {
-  /* splash screen */
-  #splashLogoBox { width: 300px; height: 300px; }  
+/* 35% */
+@media (max-width: 400px) {
+  #gameViewBox, #gameCanvas {
+    width: 354.9px;
+    height: 245px; 
+  }
+  #splashLogoBox {
+    width: 210px;
+    height: 210px; 
+  }
 }
+
+/* 31% */
+@media (max-width: 350px) {
+  #gameViewBox, #gameCanvas {
+    width: 314.34px;
+    height: 217px; 
+  }
+  #splashLogoBox {
+    width: 200px;
+    height: 200px; 
+  }
+}
+

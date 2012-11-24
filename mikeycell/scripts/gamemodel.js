@@ -49,11 +49,6 @@ mikeycell.Model = (function () {
   that.hasWon = false,   // set to true after you've won
   that.moveAutomatically = true;  // Controls automatic moves to Foundations. May want to make a setting. 
   
-  //// Deck ////
-  
-  // Array of cards
-  that.Deck = [ ]; // Filled by shuffling
-    
   //// Locations ////
   
   // Convenience for debugging and character-based interim movement
@@ -87,6 +82,28 @@ mikeycell.Model = (function () {
     return that.Location.locConstants[that.Location.locStringCodes.indexOf(locStringCode)];
   };
   
+  //// Moving Cards ////
+  
+  // Array of card objects loaded when beginning a move, unloaded when placed
+  that.Moving = { };
+  that.Moving.Cards = [ ];
+  
+  // Place a moving card into the array
+  that.addMovingCard = function (card) {
+    that.Moving.Cards.push(card);
+  }
+  
+  // Remove a card that is no longer moving from the array
+  that.removeMovingCard = function (card) {
+    var idx;
+    if (that.Moving.Cards.length) {
+      idx = that.Moving.Cards.indexOf(card);
+      if (idx !== -1) {
+        that.Moving.Cards.removeItem(idx);
+      }
+    }
+  }
+  
   //// Tableaux ////
   
   // Eight tableau at the bottom of the screen, cards fanned down
@@ -102,23 +119,33 @@ mikeycell.Model = (function () {
   
   // Sort a deck of cards into the tableaux, initializes the model
   that.Tableau.sortInto = function(deck) {
-    var i, // cards counter
-        t, // tableau counter
+    var i = 0, // cards counter
+        t = 0, // tableau counter
         len = mikeycell.cards.CARDS_IN_DECK;
     
     if (m.debug === m.DEBUGALL) { console.log('Model.Tableau.sortInto'); }
-
-    that.dealing = true; // validation temporarily disabled
-    that.init(); // set structures to initial states
     
-    for (i = 0, t = 0; i < len; ) { // Loop through all the shuffled cards
-      if (putDown( deck[i], TABLEAU_SET[t] )) { i += 1; } // place card into tableau, increment counter
-      if (t === 7) { t = 0; } else { t++; } // 1st Tableau is TABLEAU_SET[0], last is TABLEAU_SET[7]
+    that.init(); // set structures to initial states
+  
+    // recursive inner deal function with short delay between placements
+    function loopDeal () {
+      setTimeout( function () {
+        that.dealing = true;                   // validation temporarily disabled
+        putDown( deck[i], TABLEAU_SET[t] );    // place the card into the tableau
+        that.dealing = false;                 // reenable validation
+        i++;                                  // next card
+        if (t === 7) { t = 0; } else { t++; }  // next tableau, or loop back to 1st
+        if (i < len) {                        // if more cards, keep going
+          loopDeal();
+        } else {                              // when out of cards, look for exposed aces, etc
+          setTimeout( autoMoveAndCheckForWin, 50); // help our player out a little 
+        }
+      }, 35); // delay between card placements
     }
-
-    that.dealing = false;     // reenable validation
-    autoMoveAndCheckForWin(); // help our player out a little 
+    
+    loopDeal(); // invoke above function initially  
   };
+  
   
   //// Cells ////
   
@@ -154,7 +181,10 @@ mikeycell.Model = (function () {
   
   // Returns OK if the supplied card may be picked up and moved someplace else, ILLEGAL if not
   that.canPickUp = function (card) {
-    var numberOfEmptyCells;
+    var numberOfEmptyCells,
+        cardTableau,
+        lastCardPos,
+        prevMovingCard;
     
     if (m.debug === m.DEBUGALL) { console.log('Model.canPickUp: ' + card.getShortString()); }
     
@@ -170,13 +200,22 @@ mikeycell.Model = (function () {
     // card in a tableau? follow the rules
     if (TABLEAU_SET.indexOf(card.location) !== -1) {
       
-      // TODO Are there enough empty cells for this card and any atop it?
-      // Can get number of empty cells, need to figure out how to move multiple cards
-      // Probably need a queue
-      numberOfEmptyCells = Cells.getNumberEmpty();
+      // See if we're already moving a card
+      if (Moving.Cards.length > 0){
+        prevMovingCard = Moving.Cards[Moving.Cards.length - 1];
+      }
+            
+      // See if this is the tableau's end card
+      cardTableau = Tableau[card.location];
+      lastCardPos = cardTableau.length - 1;
       
-      // If this card can go somewhere, can pick it up
-      if (canPutDownAnywhere (card)) { return OK; }
+      if (cardTableau[lastCardPos] === card) {
+        if (!prevMovingCard) {
+          if (canPutDownAnywhere(card)) {
+            return OK;
+          } 
+        }
+      }
     }
     
     return ILLEGAL;
@@ -195,6 +234,7 @@ mikeycell.Model = (function () {
       if (CELL_SET.indexOf(card.location) !== -1) {
         that.Cells[card.location] = EMPTY;
         card.location = MOVING;
+        addMovingCard(card);
         return OK;
       }
       
@@ -205,6 +245,7 @@ mikeycell.Model = (function () {
         if (cardIndex !== -1) {
           that.Tableau[card.location].removeItem(cardIndex);
           card.location = MOVING;
+          addMovingCard(card);
           return OK;
         }
       }
@@ -275,31 +316,41 @@ mikeycell.Model = (function () {
   }
   
   // Places a card into the supplied destination. If permitted and successful, returns OK, otherwise ILLEGAL
-  that.putDown = function ( card, dest ) {
+  // Set the third arg to true to replace a card in its original location
+  that.putDown = function ( card, dest, puttingCardBack ) {
 
     if (m.debug === m.DEBUGALL) { console.log('Model.putDown: ' + 
       card.getShortString() + ', ' + Location.getShortString(dest)); }
     
-    if (canPutDown( card, dest )) {
+    if (canPutDown( card, dest ) || puttingCardBack) {
       
       if (CELL_SET.indexOf(dest) !== -1) {
         Cells[dest] = card;
         card.location = dest;
-        if (!dealing) { autoMoveAndCheckForWin(); }
+        removeMovingCard(card);
+        if (!dealing) { 
+          setTimeout(autoMoveAndCheckForWin, 50); 
+        }
         return OK;
       }
       
       else if (TABLEAU_SET.indexOf(dest) !== -1) {
         Tableau[dest].push(card);
         card.location = dest;
-        if (!dealing) { autoMoveAndCheckForWin(); }
+        removeMovingCard(card);
+        if (!dealing) { 
+          setTimeout(autoMoveAndCheckForWin, 50); 
+        }
         return OK;
       }
       
       else if (FOUNDATION_SET.indexOf(dest) !== -1) {
         Foundations[dest].push(card);
         card.location = dest;
-        if (!dealing) { autoMoveAndCheckForWin(); }
+        removeMovingCard(card);
+        if (!dealing) { 
+          setTimeout(autoMoveAndCheckForWin, 50); 
+        }
         return OK;
       }
     }
@@ -329,13 +380,15 @@ mikeycell.Model = (function () {
     that.Foundations[FOUNDATION2] = [ ];
     that.Foundations[FOUNDATION3] = [ ];
     that.Foundations[FOUNDATION4] = [ ];
+    that.Moving.Cards = [ ];
+    that.hasWon = false;
   };
   
   //// Get Card ////
   
   // This may not be needed in the real game. Convenient for test page though.
   that.getCardAt = function (location) {
-    if (m.debug === m.DEBUGALL) { console.log('Model.getCardAt: ' + Location.getShortString(location)); }
+    if (m.debug === m.DEBUGCRAZY) { console.log('Model.getCardAt: ' + Location.getShortString(location)); }
 
     switch (location) {
       case CELL1:
@@ -362,19 +415,20 @@ mikeycell.Model = (function () {
         break;
     }
   };
-    
+  
   // Compare ranks of two cards, return difference between them
   that.getDifferenceInRank = function (card1, card2) {
     var orderedRanks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'],
         card1Position = orderedRanks.indexOf(card1.rank),
         card2Position = orderedRanks.indexOf(card2.rank);
         
-    if (m.debug === m.DEBUGALL) { console.log('Model.getDifferenceInRank: ' + 
+    if (m.debug === m.DEBUGCRAZY) { console.log('Model.getDifferenceInRank: ' + 
       card1.getShortString() + ', ' + card2.getShortString() +
       ' = ' + card1Position - card2Position); }
 
     return card1Position - card2Position;
   };
+  
   
   // Checks for a safe automatic move. Also checks to see if we have a winner.
   // If the moveAutomatically setting is true, we make the move. 
@@ -382,19 +436,22 @@ mikeycell.Model = (function () {
   that.autoMoveAndCheckForWin = function () {
     var i, // loop counters
         j,
-        card,      // cards for comparison
+        card,                            // cards for comparison
         tempCard,
-        tabsSet = that.TABLEAU_SET, // tableaus for evaluation
-        tabsLen = tabsSet.length,
-        cellSet = that.CELL_SET, // cells for evaluation
-        cellLen = cellSet.length,
+        tabsSet = that.TABLEAU_SET,     // tableaux for evaluation
+        tabsLen = tabsSet.length,        // how many tableaux
+        cellSet = that.CELL_SET,         // cells for evaluation
+        cellLen = cellSet.length,        // how many cells
         foundSet = that.FOUNDATION_SET, // foundations for evaluation
-        foundLen = foundSet.length,
-        foundLowCard, // lowest ranking card in the foundations
-        foundAnyTableauCard = false, // tests for win
-        foundAnyCellCard = false;
+        foundLen = foundSet.length,      // how many foundations
+        foundLowCard,                   // lowest ranking card in the foundations
+        foundAnyTableauCard = false,     // tests for win
+        foundAnyCellCard = false,
+        tc,                              // card we can pass to timeout
+        tf;                              // foundation we can pass to timeout
+
           
-    if (m.debug === m.DEBUGALL) { console.log('Model.autoMove'); }
+    if (m.debug === m.DEBUGALL) { console.log('Model.autoMove...'); }
 
     // If an ace is showing in a tableau, move it to the first free foundation
     for (i = 0; i < tabsLen; i++) {
@@ -404,8 +461,12 @@ mikeycell.Model = (function () {
           if (getCardAt(foundSet[j]) === undefined) {
             // Have an empty foundation, if moving automatically place the ace there
             if (moveAutomatically && pickUp(card)) {
-              putDown(card, foundSet[j]);
-              m.view.refreshDisplay(); // refresh the display after moving automatically
+              // Gather card and empty foundation, place card there after short delay
+              tc = card;
+              tf = foundSet[j];
+              setTimeout(function () {
+                putDown(tc, tf);
+              }, 35);
             }
           }
         }
@@ -441,8 +502,12 @@ mikeycell.Model = (function () {
               if (tempCard.suit === card.suit) { // suits must match
                 if (getDifferenceInRank(tempCard, card) === -1) { // can only place next card on foundation
                   if (moveAutomatically && pickUp(card)) {
-                    putDown(card, foundSet[j]);
-                    m.view.refreshDisplay(); // refresh the display after moving automatically
+                    // Gather card and empty foundation, place card there after short delay
+                    tc = card;
+                    tf = foundSet[j];
+                    setTimeout(function () {
+                      putDown(tc, tf);
+                    }, 35);
                   }
                 }
               }
@@ -454,7 +519,7 @@ mikeycell.Model = (function () {
     
     // If no playable cards are left, you've won.
     if (!foundAnyTableauCard && !foundAnyCellCard) {
-      hasWon = true;
+      that.hasWon = true;
     }
     
     return false;
@@ -493,7 +558,9 @@ mikeycell.Model = (function () {
     getCardAt   : that.getCardAt,
     autoMove    : that.autoMove,
     pickUp      : that.pickUp,
-    putDown     : that.putDown
+    putDown     : that.putDown,
+    Moving      : that.Moving,
+    hasWon      : that.hasWon
   }
   
 })();

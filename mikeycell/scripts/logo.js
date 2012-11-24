@@ -14,7 +14,7 @@ mikeycell.logo = (function () {
   // draw our logo within the supplied container element
   // when showTag is true, writes "let's play" below spade symbol
   // when showProgress is true, turns off tag and displays progress bar of progressPct length
-  function drawLogo($canvasBox, showTag, showProgress, progressPct) {
+  function drawLogo($canvasBox, showTag, showProgress, progressPct, colorIndex) {
     var $canvas = $('<canvas>MikeyCell</canvas>')[0],
         width = $canvas.width = $canvasBox.width(), // as wide as container
         height = $canvas.height = $canvasBox.height(), // as tall as container
@@ -29,7 +29,8 @@ mikeycell.logo = (function () {
         progressBar1PctWidth = (width / 2) / 100, // 1% progress bar tick
         computedProgressBarWidth,
         i = 0, // loop counter for transfom
-        ctx; // canvas context, we'll assign in a sec
+        ctx, // canvas context, we'll assign in a sec
+        fillColors = ["#8C3B1D", "#C95D37"]; // darker and lighter colors, see mikeycell.css for palette
         
     if (m.debug === m.DEBUGALL) { console.log('logo.drawLogo: ' + 
       showTag + ', ' + showProgress + ', ' + progressPct); }
@@ -41,7 +42,7 @@ mikeycell.logo = (function () {
     // General text properties for arc logo
     ctx.font = "" + fontSizePixels + "px cboxregular";
     ctx.textAlign = "center";
-    ctx.fillStyle = "#8C3B1D"; // see mikeycell.css for palette link
+    ctx.fillStyle = fillColors[colorIndex];
     ctx.shadowColor = "#08111C";
     ctx.shadowBlur = 1;
     ctx.shadowOffsetX = 1;

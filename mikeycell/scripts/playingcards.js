@@ -110,6 +110,10 @@ mikeycell.cards = (function () {
     this.suitColor = that.suits[suit][2];     // 'Red'
     this.rankName = that.ranks[rank];         // 'Ace'
     this.rankAndSuit = this.rank + this.suit; // 'AD'
+    this.cardX = 0;                            // X pos of card top left, set later
+    this.cardY = 0;                            // Y pos of card top left
+    this.offsetX = 0;                          // X offset of card to mouse pointer
+    this.offsetY = 0;                          // Y offset of card to mouse pointer
     this.getShortString = function() {
       return this.rank + this.suitSymbol;     // 4♠
     }
