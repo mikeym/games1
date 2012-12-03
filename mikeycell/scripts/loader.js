@@ -13,8 +13,6 @@ mikeycell.debug = mikeycell.DEBUGALL; // current debugging level
 
 console = window.console || { log: function() {} }; // ie console.log polyfill
 
-mikeycell.showPlayForm = true; // character-based play
-
 // Loader property of the global object, used to initialize scripts
 mikeycell.loader = (function () {
   var that = this,
@@ -57,6 +55,8 @@ mikeycell.loader = (function () {
   // returns an array of card image resources
   function listCardResources( that ) {
     if (m.debug === m.DEBUGALL) { console.log('loader.listCardResources'); }
+    
+    // TODO Pass in a function, one for big images, one for small ones.
 
     // local function wraps card identifier with url and resource prefix
     var g = function ( cardRankPlusSuit ) {
@@ -77,10 +77,16 @@ mikeycell.loader = (function () {
   // Loaded by addCardImage( url )
   that.CardImages = { };
   
+  // TODO add a smaller card images object
+  
   // Adds a preloaded image to the cardImages object with the card's rank and suit as the property index
   function addCardImage(url) {
+
+    // TODO pass in a regex pattern? or a switch to select the one you want.
+    // then have a small set of images
+
     var patternRegex = /(cardimages\/)([\w]+)(.png)/, // regex with substrings for obtaining rank and suit
-        patternMatch = url.match(patternRegex); // creates an array from the regex substrings
+        patternMatch = url.match(patternRegex); // creates an array item from the regex substrings
         img = new Image();
     img.width = CARD_IMAGE_WIDTH;
     img.height = CARD_IMAGE_HEIGHT;
@@ -93,6 +99,11 @@ mikeycell.loader = (function () {
   // Returns a preloaded Image element from the cardImages
   function getCardImage ( cardRankPlusSuit ) {
     if (m.debug === m.DEBUGALL) { console.log('loader.getCardImage: ' + cardRankPlusSuit + " " + that.CardImages[cardRankPlusSuit]); }
+
+    // TODO test viewport width here before returning the card
+    // that way you can return different sized cards for different sized screens
+    // also need to save differently sized cards
+    
     return that.CardImages[cardRankPlusSuit];
   }
     
@@ -120,7 +131,10 @@ mikeycell.loader = (function () {
                'scripts/gamemodel.js',
                'scripts/gameviewcanvas.js',
                'scripts/gameloop.js',
-               'scripts/playtouch.js'], // TODO remove after mouse solid
+               'scripts/playtouch.js',
+               'scripts/audio.js',
+               'scripts/sounds.js',
+               'scripts/settings.js'], 
         complete: function () {
           // display splash screen at startup, defined in screens.js
           mikeycell.screens.start();

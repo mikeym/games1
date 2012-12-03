@@ -52,7 +52,12 @@
         <div id="settingsLogoBox" class="logoBox">
           <!-- canvas logo drawn here by logo.js -->
         </div>
-        <div id="settingsText">TODO: Set some settings</div>
+        <div id="settingsText">
+          <form id="settingsForm">
+            <div><input id="playSoundsChk" type="checkbox">Play Sounds</div>
+            <div><input id="autoPlayChk" type="checkbox">Enable Auto-Play</div>
+          </form>
+        </div>
         <button type="button" id="settingsMenuButton" data-screen="menuScreen">Ok</button>
       </div>
     </article>
@@ -64,9 +69,10 @@
           <!-- canvas logo drawn here by logo.js -->
         </div>
         <section id="aboutText"> 
-          <p>This FreeCell variant was developed for the UW HTML5 Web and Mobile Game Development course (Fall, 2012).</p>
-          <cite>Created by <a href="http://www.deepgraysea.com/">Mikey Micheletti</a></cite>
-          <p>Version 0.5 / <time datetime="2012-11-23">November 23, 2012</time></p>
+          <p>Project for the UW HTML5 Web and Mobile Game Development course (Fall, 2012).
+             Sounds courtesy <a href="http://www.freesound.org" target="_new">Freesound</a>.</p>
+          <cite>Created by <a href="http://www.deepgraysea.com/" target="_new">Mikey Micheletti</a></cite>
+          <p>Version 0.6 / <time datetime="2012-12-02">December 2, 2012</time></p>
         </section>
         <button type="button" id="aboutMenuButton" data-screen="menuScreen">Ok</button>
       </div>

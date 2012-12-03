@@ -118,7 +118,8 @@ mikeycell.screens.menuScreen = (function () {
     }
     needsInit = false;
     
-    // Turn off game loop and mouse event handling in game screen
+    // Turn off sounds, game loop and mouse event handling in game screen
+    m.Audio.beQuiet();
     m.gameloop.setLoopFunction(null);
     m.playtouch.unhookMouseEvents();
     
@@ -174,6 +175,9 @@ mikeycell.screens.settingsScreen = (function () {
   
   // Run when the settings screen is displayed
   function run () {
+    var autoMove = m.Settings.getAutoMove(),
+        playSounds = m.Settings.getPlaySounds();
+        
     if (m.debug > m.NODEBUG) { console.log('screens.settingsScreen.run'); }
     
     // one-time initialization
@@ -191,6 +195,20 @@ mikeycell.screens.settingsScreen = (function () {
           m.screens.showScreen(nextScreenId);
         }
       );
+      
+      // Play sounds checkbox initialization and handling
+      $('#playSoundsChk')
+        .prop('checked', playSounds)
+        .change( function() {
+          m.Settings.setPlaySounds($(this).prop('checked'));
+        });
+      
+      // Autoplay checkbox initialization and handling  
+      $('#autoPlayChk')
+        .prop('checked', autoMove)
+        .change( function() {
+          m.Settings.setAutoMove($(this).prop('checked'));
+        });
       
       // redraw logo when window is resized
       $(window)
@@ -224,13 +242,23 @@ mikeycell.screens.gameScreen = (function () {
       $('#gameMenuLink')
         .click( function (event) {
           m.playtouch.unhookMouseEvents();
+          m.Model.stopGameNow();
+          m.Audio.beQuiet();
           m.screens.showScreen('menuScreen');
       });
       
       // shuffle and deal if we ask nicely
       $('#newGameLink')
         .click( function (event) {
-          m.screens.showScreen('gameScreen');
+          // if you start a new game before winning, give 'em the not impressed face
+          if (m.Settings.getPlaySounds() && !hasWon) {
+            m.Sounds.playSoundFor(m.Sounds.QUIT);
+          }
+          // now we play
+          setTimeout( function() {
+            m.Model.stopGameNow();
+            m.screens.showScreen('gameScreen');
+          }, m.Settings.Delays.Quit);
       });
       
     }

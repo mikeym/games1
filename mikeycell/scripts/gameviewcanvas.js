@@ -70,6 +70,10 @@ mikeycell.view = (function() {
         COL_n_X = [0, COL1X, COL2X, COL3X, COL4X, COL5X, COL6X, COL7X, COL8X];
         TOPY = 35 * reductionFactor;
         TABLEAUY = 210 * reductionFactor;
+        
+        // TODO figure out appropriate card width for smaller viewports
+        // if there are multiple card file arrays?
+        
         CARDWIDTH = 113 * reductionFactor;
         CARDHEIGHT = 157 * reductionFactor;
         CARDYOFFSET = 26 * reductionFactor;
