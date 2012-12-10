@@ -146,7 +146,7 @@ mikeycell.loader = (function () {
     Modernizr.load([ 
       // scripts
       {
-        load: ['../../scripts/jquery-1.8.2.min.js', 
+        load: ['scripts/jquery-1.8.2.min.js', 
                'scripts/pattern.js',
                'scripts/logo.js',  
                'scripts/storage.js',

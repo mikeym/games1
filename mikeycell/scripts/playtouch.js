@@ -21,15 +21,15 @@ mikeycell.playtouch = (function () {
         } else {
           pickUp(v.getCardAtEventPosition(e.originalEvent)); 
         }
-        //return false;
+        return false;
       },
       touchend: function(e) {
         putDown(v.getLocationAtEventPosition(e.originalEvent));
-        //return false;
+        return false;
       },
       touchmove: function(e) {
         moveCard(e.originalEvent);
-        //return false;
+        return false;
       },
       mousedown: function(e) {
         if (hasWon) {
