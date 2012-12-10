@@ -125,8 +125,10 @@ mikeycell.Model = (function () {
         len = m.cards.CARDS_IN_DECK,
         settings = m.Settings,
         putCardDelayTime = settings.Delays.PutCard;
-    
+            
     if (m.debug === m.DEBUGALL) { console.log('Model.Tableau.sortInto'); }
+    
+    $('#newGameLink').attr('disabled', 'disabled'); // disable new game link
     
     that.initialize(); // set structures to initial states
 
@@ -140,11 +142,14 @@ mikeycell.Model = (function () {
         that.dealing = false;                         // reenable validation
         i++;                                          // next card
         if (t === 7) { t = 0; } else { t++; }         // next tableau, or loop back to 1st
-        if (i < len ) {                                // if more cards, keep going
+        if (i < len ) {                               // if more cards, keep going
           loopDeal();
-        } else {                                    // when out of cards, look for exposed aces, etc
-          setTimeout( that.autoMoveAndCheckForWin,  // help player out a little
-                      putCardDelayTime);            // delay times differ w or w/o sounds 
+        } else {                                      // when out of cards, look for exposed aces, etc
+          setTimeout( that.autoMoveAndCheckForWin,    // help player out a little
+                      putCardDelayTime);              // delay times differ w or w/o sounds 
+          setTimeout( function () {
+            $('#newGameLink').removeAttr('disabled'); // reenable new game link
+          }, putCardDelayTime);
         }
       }, putCardDelayTime); // delay between card placements
     }
@@ -477,13 +482,16 @@ mikeycell.Model = (function () {
         j,
         card,                           // cards for comparison
         tempCard,
+        cellSet = that.CELL_SET,        // cells for evaluation
+        cellLen = cellSet.length,       
         tabsSet = that.TABLEAU_SET,     // tableaux for evaluation
-        tabsLen = tabsSet.length,       // how many tableaux
+        tabsLen = tabsSet.length,
         foundSet = that.FOUNDATION_SET, // foundations for evaluation
         foundLen = foundSet.length,     // how many foundations
         foundLowCard,                   // lowest ranking card in the foundations
         foundAnyTableauCard = false,    // tests for win
         foundAnyCellCard = false,
+        autoMovingACard = false,        // only move one please
         tc,                             // card we can pass to timeout
         tf,                             // foundation we can pass to timeout
         putCardDelayTime = m.Settings.Delays.PutCard, // variable delays for sound on/off
@@ -506,6 +514,7 @@ mikeycell.Model = (function () {
               // Gather card and empty foundation, place card there after short delay
               tc = card;
               tf = foundSet[j];
+              autoMovingACard = true;
               setTimeout(function () {
                 that.putDown(tc, tf);
               }, putCardDelayTime);
@@ -541,6 +550,38 @@ mikeycell.Model = (function () {
             tempCard = that.getCardAt(foundSet[j]);
             if (tempCard) {
               foundAnyTableauCard = true;
+              if (tempCard.suit === card.suit) { // suits must match
+                if (that.getDifferenceInRank(tempCard, card) === -1) { // can only place next card on foundation
+                  if (moveAutomatically && that.pickUp(card)) {
+                    // Gather card and empty foundation, place card there after short delay
+                    tc = card;
+                    tf = foundSet[j];
+                    autoMovingACard = true;
+                    setTimeout(function () {
+                      that.putDown(tc, tf);
+                    }, putCardDelayTime);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // loop through cells to check for a game winner, or a card to move if we're not moving something else
+    for (i = 0; i < cellLen; i++) {
+      card = that.getCardAt(cellSet[i]);
+      if (card) {
+        foundAnyCellCard = true;
+        if (foundLowCard && that.getDifferenceInRank(foundLowCard, card) < -1) {
+          continue;
+        } else if (autoMovingACard) {
+          continue;
+        } else {
+          for (j = 0; j < foundLen; j++) {
+            tempCard = that.getCardAt(foundSet[j]);
+            if (tempCard) {
               if (tempCard.suit === card.suit) { // suits must match
                 if (that.getDifferenceInRank(tempCard, card) === -1) { // can only place next card on foundation
                   if (moveAutomatically && that.pickUp(card)) {

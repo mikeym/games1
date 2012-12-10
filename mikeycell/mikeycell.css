@@ -183,16 +183,29 @@ li {
   top: -120px;  
 }
 #settingsScreen form div {
-   text-align: left;
+  text-align: left;
   margin: 0.5em 2em; 
 }
 #settingsScreen input[type=checkbox] {
   margin-right: 0.5em;
 }
+.mobileSafari #playSoundsTxt {
+  color: #999; 
+  text-shadow: none;
+}
+#clicktoadd {
+  display: none;
+}
+.mobileSafari #clicktoadd {
+  display: block; 
+}
 #settingsScreen button {
   width: 5em;  
   position: relative;
   top: -120px;
+}
+.mobileSafari #settingsScreen button {
+  top: -170px; 
 }
 
 /* about screen */
@@ -488,6 +501,7 @@ li {
     background-color: rgb(40,65,23);
   }
   #patternBkgdCanvas { display: none; }
+  #gameViewBox { margin-top: 1px; }
   #gameViewBox, #gameCanvas {
     width: 709px;
     height: 490px; 
@@ -503,6 +517,25 @@ li {
     box-shadow: none;
   }
   #gameScreenMenu { top: -30px; } 
+  #settingsText {
+    margin: 3em auto;  
+    position: relative;
+    top: -90px;
+    font-size: 0.9em;
+  }
+  #settingsScreen button {
+    height: 2em;
+  }
+  .mobileSafari #settingsScreen button {
+    top: -120px; 
+  }
+  #settingsScreen form div {
+    margin: 0.5em 0.5em 0.5em 1em;
+    text-wrap: nowrap; 
+  }
+  #aboutScreen p, #aboutScreen cite {
+    margin: 0.35em 0.5em; 
+  }
 }
 
 /* 65% */
@@ -548,6 +581,9 @@ li {
     height: 2em; 
     top: -45px;
   }
+  .mobileSafari #settingsScreen button {
+    top: -135px; 
+  }
 }
 
 /* 60% */
@@ -587,6 +623,15 @@ li {
     width: 300px;
     height: 300px; 
   }
+  #menuLogoBox, #settingsLogoBox, #aboutLogoBox {
+    width: 130px;
+    height: 130px;
+    margin: 5px auto 0 auto; 
+  }  
+  #menuScreen menu {
+    top: -60px;
+    left: -2.5em; 
+  } 
 }
 
 /* 45% */
@@ -596,20 +641,38 @@ li {
     height: 315px; 
   }
   #splashLogoBox {
+    margin: 0 auto;
     width: 270px;
     height: 270px; 
   }
 }
 
-/* 40% */
+/* 40% - iPhone 4 landscape */
 @media (max-width: 450px) {
   #gameViewBox, #gameCanvas {
     width: 405.6px;
     height: 280px; 
   }
   #splashLogoBox {
-    width: 240px;
-    height: 240px; 
+    width: 200px;
+    height: 200px; 
+  }
+  .contentWrapper {
+    width: 12em;
+    height: 11em; 
+    margin: 5px auto;
+  }
+  .mobileSafari .contentWrapper {
+    height: 13em; 
+  }
+  #menuScreen menu {
+    left: -3em;
+  }
+  #menuScreen button {
+    font-size: .6em;
+    width: 11.5em;
+    height: 1.75em;
+    margin-top: 0.5em;
   }
 }
 
@@ -619,21 +682,21 @@ li {
     width: 354.9px;
     height: 245px; 
   }
-  #splashLogoBox {
-    width: 210px;
-    height: 210px; 
-  }
 }
 
-/* 31% */
+/* 31% - iPhone 4 portrait */
 @media (max-width: 350px) {
   #gameViewBox, #gameCanvas {
     width: 314.34px;
     height: 217px; 
   }
-  #splashLogoBox {
-    width: 200px;
-    height: 200px; 
+  .mobileSafari .contentWrapper {
+    height: 15em; 
+  }
+  #menuScreen button {
+    font-size: .80em;
+    width: 11.5em;
+    height: 2em;
   }
 }
 

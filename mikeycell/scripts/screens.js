@@ -6,18 +6,27 @@ var mikeycell = mikeycell || { };
 
 // Shared screen handling
 mikeycell.screens = (function () {
-  var m = mikeycell;
+  var m = mikeycell,
+          MOBILE_SAFARI_USERAGENT_REGEX = /iPhone|iPod|iPad/;
   
   'use strict';
   
   if (m.debug > m.NODEBUG) { console.log('screens'); }
+  
+  // iPhone/iPad win some, lose some...
+  // Show the 'Add to home screen link in settings, but disable the play sounds check.
+  if (MOBILE_SAFARI_USERAGENT_REGEX.test(window.navigator.userAgent)) {
+    $('html').addClass('mobileSafari');
+    m.Settings.setPlaySounds(false);
+    $('#playSoundsChk').attr('disabled', 'disabled');
+  }
     
   // Show the screen with the given id
   function showScreen (screenId) {    
     var $currentScreen = $('#game .screen.active'),
         $nextScreen = $('#' + screenId)
 
-  if (m.debug > m.NODEBUG) { console.log('screens.showScreen: ' + screenId); }
+    if (m.debug > m.NODEBUG) { console.log('screens.showScreen: ' + screenId); }
 
     if ($currentScreen) {
       $currentScreen.removeClass('active');
@@ -26,6 +35,11 @@ mikeycell.screens = (function () {
       $nextScreen.addClass('active');
       m.screens[screenId].run();
     }
+
+    // hide address bar on mobile if needed
+    setTimeout(function () {
+      if (!pageYOffset) { window.scrollTo(0,1); }
+    }, 750);
   }
   
   // Initialize by displaying the splash screen
@@ -54,6 +68,8 @@ mikeycell.screens = (function () {
 
 // Splash screen handling
 mikeycell.screens.splashScreen = (function () {
+  var m = mikeycell;
+  
   'use strict'; 
   
   // Initialize splash screen if needed
@@ -86,7 +102,8 @@ mikeycell.screens.splashScreen = (function () {
 
 // Menu screen handling
 mikeycell.screens.menuScreen = (function () {
-  var needsInit = true;
+  var m = mikeycell,
+          needsInit = true;
   
   'use strict';
   
@@ -131,7 +148,8 @@ mikeycell.screens.menuScreen = (function () {
 
 // About screen handling
 mikeycell.screens.aboutScreen = (function () {
-  var needsInit = true;
+  var m = mikeycell,
+          needsInit = true;
   
   'use strict';
   
@@ -169,7 +187,8 @@ mikeycell.screens.aboutScreen = (function () {
 
 // Settings screen handling
 mikeycell.screens.settingsScreen = (function () {
-  var needsInit = true;
+  var m = mikeycell,
+          needsInit = true;
 
   'use strict';
   
@@ -178,7 +197,9 @@ mikeycell.screens.settingsScreen = (function () {
     var autoMove = m.Settings.getAutoMove(),
         playSounds = m.Settings.getPlaySounds();
         
-    if (m.debug > m.NODEBUG) { console.log('screens.settingsScreen.run'); }
+    if (m.debug > m.NODEBUG) { console.log('screens.settingsScreen.run' +
+                                           ' auto move: ' + autoMove +
+                                           ' play sounds: ' + playSounds); }
     
     // one-time initialization
     if (needsInit) {
@@ -226,13 +247,16 @@ mikeycell.screens.settingsScreen = (function () {
 
 // Game screen handling
 mikeycell.screens.gameScreen = (function () {
-  var needsInit = true;
-  
+  var m = mikeycell,
+          needsInit = true;
+    
   'use strict';
-
+  
   // Run when the game screen is displayed
   function run () {
     var $canvasBox;
+    
+    $('#newGameLink').removeAttr('disabled'); // can click new game link
 
     if (m.debug > m.NODEBUG) { console.log('screens.gameScreen.run'); }
     
@@ -250,15 +274,20 @@ mikeycell.screens.gameScreen = (function () {
       // shuffle and deal if we ask nicely
       $('#newGameLink')
         .click( function (event) {
+          // disallow double-clicks, also disabled in the model while dealing
+          if ( $(this).attr('disabled') === 'disabled' ) { return false; }  
+          $(this).attr('disabled', 'disabled');        
           // if you start a new game before winning, give 'em the not impressed face
           if (m.Settings.getPlaySounds() && !hasWon) {
             m.Sounds.playSoundFor(m.Sounds.QUIT);
           }
+ 
           // now we play
           setTimeout( function() {
             m.Model.stopGameNow();
             m.screens.showScreen('gameScreen');
-          }, m.Settings.Delays.Quit);
+            }, m.Settings.Delays.Quit);
+          return false;
       });
       
     }
@@ -273,10 +302,12 @@ mikeycell.screens.gameScreen = (function () {
     // hook up event handling
     m.playtouch.hookMouseEvents();    
 
-    // resize the game pane if needed
+    // resize the game pane if needed after a short delay
     $(window)
       .resize(function (event) {
-        m.view.setMetrics();
+        setTimeout( function () {
+          mikeycell.view.setMetrics();
+        }, 500);
     });
 
   }

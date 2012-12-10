@@ -12,60 +12,55 @@ mikeycell.Settings = (function () {
   'use strict';
   
   if (m.debug > m.NODEBUG) { console.log('Settings'); }
-
-  // Sound and auto-move properties
+  
+  // Local properties for speedier delay lookups
   that.PlaySounds;
   that.AutoMove;
   
-  // Setter for game sounds
+  // Setter for game sounds, sets storage and local prop
   that.setPlaySounds = function (toPlay) {
-    // TODO save settings with cookie etc
-    that.PlaySounds = toPlay;
+    PlaySounds = toPlay;
+    m.Storage.put('playSounds', toPlay);
   }
   
-  // Getter for game sounds
+  // Getter for game sounds, will set sound on if previously undefined
   that.getPlaySounds = function () {
-    // TODO get settings from cookie etc
-    return that.PlaySounds;
-  }
-  
-  // Setter for auto-move
-  that.setAutoMove = function(toAutoMove) {
-    // TODO save settings with cookie etc
-    that.AutoMove = toAutoMove;
-  }
-  
-  // Getter for auto-move
-  that.getAutoMove = function() {
-    // TODO get settings from cookie etc
-    return that.AutoMove;
-  }
-  
-  // Initialize settings at load time, providing default values if needed
-  that.init = (function() {
-    var sounds = getPlaySounds(),
-        moves = getAutoMove();
-        
-    if (sounds === undefined) {
-      setPlaySounds(true); // Play sounds by default
-    }
-    if (moves === undefined) {
-      setAutoMove(true); // Auto-move by default
-    }
+    var localSounds = m.Storage.get('playSounds');
     
-    if (m.debug >= m.DEBUGALL) { 
-      console.log('Settings.init PlaySounds=' + that.PlaySounds + ' AutoMove=' + that.AutoMove); 
+    if (localSounds !== null) {
+      return localSounds;
+    } else {
+      setPlaySounds(true);
+      return true;
     }
-
-  })()
+  }
+  
+  // Setter for auto-move, sets storage and local prop
+  that.setAutoMove = function(toAutoMove) {
+    AutoMove = toAutoMove;
+    m.Storage.put('autoMove', toAutoMove);
+  }
+  
+  // Getter for auto-move, will set to true if previously undefined
+  that.getAutoMove = function() {
+    var localMove = m.Storage.get('autoMove');
+    
+    if (localMove !== null) {
+      return localMove;
+    } else {
+      setAutoMove(true);
+      return true;
+    }
+  }
   
   // Delay values for various in-game activities with and without sounds.
+  // These use local properties since they're frequently called.
   that.Delays = {
-    PutCard  : PlaySounds ? 80 : 35,
-    AutoMove : PlaySounds ? 100 : 50,
-    Shuffle  : PlaySounds ? 600 : 0,
-    Win      : PlaySounds ? 1000 : 0,
-    Quit     : PlaySounds ? 500 : 0
+    PutCard  : that.PlaySounds ? 80 : 35,
+    AutoMove : that.PlaySounds ? 100 : 50,
+    Shuffle  : that.PlaySounds ? 600 : 0,
+    Win      : that.PlaySounds ? 1000 : 0,
+    Quit     : that.PlaySounds ? 500 : 0
   }
   
   

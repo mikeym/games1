@@ -120,8 +120,9 @@ mikeycell.cards = (function () {
     this.getLongString = function() {
       return this.rankName + ' of ' + this.suitName; // 4 of Spades
     }
-    // preloaded image for this card
-    this.image = m.loader.getCardImage(this.rankAndSuit);
+    // preloaded standard and small-sized images for this card
+    this.image = m.loader.getCardImage(this.rankAndSuit, m.loader.CARD_SIZE_LG);
+    this.imageSm = m.loader.getCardImage(this.rankAndSuit, m.loader.CARD_SIZE_SM);
   };
   
   // Simple method to obtain a random integer based on the supplied number

@@ -21,15 +21,15 @@ mikeycell.playtouch = (function () {
         } else {
           pickUp(v.getCardAtEventPosition(e.originalEvent)); 
         }
-        return false;
+        //return false;
       },
       touchend: function(e) {
         putDown(v.getLocationAtEventPosition(e.originalEvent));
-        return false;
+        //return false;
       },
       touchmove: function(e) {
         moveCard(e.originalEvent);
-        return false;
+        //return false;
       },
       mousedown: function(e) {
         if (hasWon) {
@@ -46,7 +46,11 @@ mikeycell.playtouch = (function () {
       mousemove: function(e) {
         moveCard(e);
         return false;
-      }
+      },
+			mouseleave: function(e) {
+				leftCanvas(e);
+				return false;
+			}
     });
       
   };
@@ -77,7 +81,8 @@ mikeycell.playtouch = (function () {
   
   // Called from mouseup handler, places a card if permitted and clears the cardInfo array
   function putDown (dest) {    
-    var i;
+    var i,
+		    card;
     
     if (dest) {
     
@@ -97,6 +102,20 @@ mikeycell.playtouch = (function () {
       }
     }
   }
+	
+	function leftCanvas () {
+		var i,
+		    card;
+		if (d.debug >= d.DEBUGALL) { console.log('playtouch.leftCanvas'); }
+		
+		for (i = 0; i < m.Moving.Cards.length; i++) {
+			card = m.Moving.Cards[i];
+			if (card) {
+				m.putDown(card, card.orig, true);
+				card.orig = null;
+			}
+		}
+	}
   
   // DEBUGGING
   printAllCardsAndLocations = function() {

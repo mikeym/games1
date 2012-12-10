@@ -74,7 +74,7 @@ mikeycell.logo = (function () {
       if (progressPct && parseInt(progressPct) > 0) {
         progressBarCurrentWidth = progressBar1PctWidth * parseInt(progressPct);
       ctx.beginPath();
-      ctx.rect(width / 4, height - fontSizePixels, progressBarCurrentWidth, 5);
+      ctx.rect(width / 4, height - (2 * fontSizePixels), progressBarCurrentWidth, 5);
       ctx.fill();
       }
     }
@@ -83,7 +83,7 @@ mikeycell.logo = (function () {
     if (showTag) {
       ctx.font = "" + (fontSizePixels / 1.95) + "px cboxregular";
       ctx.save();
-      ctx.fillText(textTag, width / 2, height - fontSizePixels);
+      ctx.fillText(textTag, width / 2, height - (2 * fontSizePixels));
       ctx.restore();
     }
     

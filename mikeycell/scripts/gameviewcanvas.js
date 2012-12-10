@@ -12,6 +12,8 @@ mikeycell.view = (function() {
       d = mikeycell,
       
       ctx, // context at the module level, assigned when new game started
+      $theCanvas, // stored for recomputing metrics
+      $theCanvasBox, // container canvas lives in
       numCards = c.CARDS_IN_DECK,
       
       // essentially a 1-based array (tabs[1] = m.TABLEAU1)
@@ -43,6 +45,7 @@ mikeycell.view = (function() {
       CARDHEIGHT = 157, // card height
       CARDYOFFSET = 26, // for casades in tableau
       CARDRADIUS = 7, // corner radius
+      USESMALLCARDS = false, // Determined during metrics
       
       // colors
       CELLBKGDCOLOR = "#3A5E21",
@@ -55,44 +58,72 @@ mikeycell.view = (function() {
   // Sets game metrics based on the size of the canvas, which is sized based on it's container.
   // The default large size is 1014 x 700. This is called for a new game or when the window is resized.
   function setMetrics() {
-    var width = ctx.canvas.width,
-        height = ctx.canvas.height,
-        reductionFactor = width / DEFAULT_LARGE_WIDTH;
+    var width,
+        height,
+        reductionFactor;
         
-        COL1X = 20 * reductionFactor;
-        COL2X = 143 * reductionFactor;
-        COL3X = 266 * reductionFactor;
-        COL4X = 389 * reductionFactor;
-        COL5X = 512 * reductionFactor;
-        COL6X = 635 * reductionFactor;
-        COL7X = 758 * reductionFactor;
-        COL8X = 881 * reductionFactor;
-        COL_n_X = [0, COL1X, COL2X, COL3X, COL4X, COL5X, COL6X, COL7X, COL8X];
-        TOPY = 35 * reductionFactor;
-        TABLEAUY = 210 * reductionFactor;
-        
-        // TODO figure out appropriate card width for smaller viewports
-        // if there are multiple card file arrays?
-        
-        CARDWIDTH = 113 * reductionFactor;
-        CARDHEIGHT = 157 * reductionFactor;
-        CARDYOFFSET = 26 * reductionFactor;
-        CARDRADIUS = 7 * reductionFactor;
+    //ctx = $theCanvas.getContext('2d');
+    width =  ctx.canvas.width = $theCanvasBox.width();
+    height = ctx.canvas.height = $theCanvasBox.height();
+    reductionFactor = width / DEFAULT_LARGE_WIDTH;
+    
+    COL1X = 20 * reductionFactor;
+    COL2X = 143 * reductionFactor;
+    COL3X = 266 * reductionFactor;
+    COL4X = 389 * reductionFactor;
+    COL5X = 512 * reductionFactor;
+    COL6X = 635 * reductionFactor;
+    COL7X = 758 * reductionFactor;
+    COL8X = 881 * reductionFactor;
+    COL_n_X = [0, COL1X, COL2X, COL3X, COL4X, COL5X, COL6X, COL7X, COL8X];
+    TOPY = 35 * reductionFactor;
+    TABLEAUY = 210 * reductionFactor;
+    
+    if (width > 456) {
+      // desktop sizes, use large card
+      USESMALLCARDS = false;
+      CARDWIDTH = 113 * reductionFactor;
+      CARDHEIGHT = 157 * reductionFactor;
+    } else if (width === 456) {
+      // iphone landscape mode
+      USESMALLCARDS = true;
+      CARDWIDTH = 51;
+      CARDHEIGHT = 71;
+    } else {
+      // shrinky-dink cellphones in portrait mode
+      USESMALLCARDS = true;
+      CARDWIDTH = 51 * (width / 456);
+      CARDHEIGHT = 71 * (width / 456);
+    }
+    
+    CARDYOFFSET = 26 * reductionFactor;
+    CARDRADIUS = 7 * reductionFactor;
+    
+    if (d.debug > d.NODEBUG) { console.log('view.setMetrics: cardwidth: ' + CARDWIDTH + 
+                                           '\n cardheight: ' + CARDHEIGHT); }
+    if (d.debug > d.NODEBUG) { console.log('view.setMetrics: canvas width: ' + width +
+                                           '\n canvas height: ' + height); }
   }
   
   //// Game play view methods ////
 
   // Shuffle the cards, lay them out, and start the game.
   function newGame($canvasBox) {
-    var $canvas = $('<canvas id="gameCanvas">MikeyCell</canvas>')[0],
-        width = $canvas.width = $canvasBox.width(), // as wide as container
-        height = $canvas.height = $canvasBox.height(); // as tall as container
+    var $canvas,
+        width,
+        height;
         
     if (d.debug > d.NODEBUG) { console.log('view.newGame'); }
+        
+    $canvas = $('<canvas id="gameCanvas">MikeyCell</canvas>')[0];
+    width = $canvas.width = $canvasBox.width(); // as wide as container
+    height = $canvas.height = $canvasBox.height(); // as tall as container        
 
     // create canvas and get its context
     $($canvasBox).html($canvas);
     ctx = $canvas.getContext('2d');
+    $theCanvas = $canvas;
+    $theCanvasBox = $canvasBox;
     
     // Responsive sizes set
     setMetrics();
@@ -106,25 +137,24 @@ mikeycell.view = (function() {
     ctx.shadowOffsetY = 2;
 
     // Get a new sorted deck and refresh the tableaux
-    m.Deck = c.newDeck(true); // shuffled
-    m.Tableau.sortInto(m.Deck);
-    
-    // hide address bar on mobile if needed after dealing into tableau
-    window.scrollTo(0,1); 
-    
-//    // TEMPORARY TESTING FUN AUTOMATIC VICTORY HOORAY
-//    var k = m.Deck = c.newDeck();
-//    var a = [
-//    k[12], k[6], k[25], k[19], k[38], k[32], k[51], k[45],
-//    k[11], k[5], k[24], k[18], k[37], k[31], k[50], k[44],
-//    k[10], k[4], k[23], k[17], k[36], k[30], k[49], k[43],
-//    k[9],  k[3], k[22], k[16], k[35], k[29], k[48], k[42],
-//    k[8],  k[2], k[21], k[15], k[34], k[28], k[47], k[41],
-//    k[7],  k[1], k[20], k[14], k[33], k[27], k[46], k[40],
-//    k[0],  k[13], k[26], k[39]
-//    ];
-//    m.Tableau.sortInto(a);
-    
+    // Set "mikeycell.PLAYNORMALLY = false" to see auto-shuffle-win
+    if (d.PLAYNORMALLY) {
+      m.Deck = c.newDeck(true); // shuffled
+      m.Tableau.sortInto(m.Deck);
+    } else {
+      // TEMPORARY TESTING FUN AUTOMATIC VICTORY HOORAY
+      var k = m.Deck = c.newDeck();
+      var a = [
+      k[12], k[6], k[25], k[19], k[38], k[32], k[51], k[45],
+      k[11], k[5], k[24], k[18], k[37], k[31], k[50], k[44],
+      k[10], k[4], k[23], k[17], k[36], k[30], k[49], k[43],
+      k[9],  k[3], k[22], k[16], k[35], k[29], k[48], k[42],
+      k[8],  k[2], k[21], k[15], k[34], k[28], k[47], k[41],
+      k[7],  k[1], k[20], k[14], k[33], k[27], k[46], k[40],
+      k[0],  k[13], k[26], k[39]
+      ];
+      m.Tableau.sortInto(a);
+    }
   };
   
   // Brute force method refreshes all tableau, cell and foundation displays, called externally by loop
@@ -230,7 +260,7 @@ mikeycell.view = (function() {
         theTableau = m.Tableau[tabs[tabNumber]];
         theCard = theTableau[i];
         // draws a card in this tableau's column, cascaded down from it's predecessor
-        ctx.drawImage(theCard.image, 
+        ctx.drawImage(USESMALLCARDS ? theCard.imageSm : theCard.image, 
                       COL_n_X[tabNumber], 
                       TABLEAUY + (i * CARDYOFFSET), 
                       CARDWIDTH, 
@@ -253,7 +283,7 @@ mikeycell.view = (function() {
     theCard = m.Cells[cellNumber]; // 1 - 4
     if (theCard) {
       // draw the card in the cell
-      ctx.drawImage(theCard.image,
+      ctx.drawImage(USESMALLCARDS ? theCard.imageSm : theCard.image,
                     COL_n_X[cellNumber],
                     TOPY,
                     CARDWIDTH,
@@ -274,7 +304,7 @@ mikeycell.view = (function() {
     theCard = f[f.length - 1]; // just draw the last card
     if (theCard) {
       // draw the card in the foundation
-      ctx.drawImage(theCard.image,
+      ctx.drawImage(USESMALLCARDS ? theCard.imageSm : theCard.image,
                     COL_n_X[foundationNumber],
                     TOPY,
                     CARDWIDTH,
@@ -327,7 +357,7 @@ mikeycell.view = (function() {
         ctx.shadowOffsetY = 5;
         
         // draw the card in its new position
-        ctx.drawImage(card.image,
+        ctx.drawImage(USESMALLCARDS ? card.imageSm : card.image,
                       card.cardX,
                       card.cardY,
                       CARDWIDTH,

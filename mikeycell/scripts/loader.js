@@ -9,7 +9,9 @@ mikeycell.DEBUGSOME = 1;  // console logging of top-level code
 mikeycell.DEBUGALL = 2;   // console logging of detail methods and loops
 mikeycell.DEBUGCRAZY = 3; // console logging of every last nutso thing
 
-mikeycell.debug = mikeycell.DEBUGALL; // current debugging level
+mikeycell.debug = mikeycell.NODEBUG; // current debugging level
+
+mikeycell.PLAYNORMALLY = true; // set to false for testing win
 
 console = window.console || { log: function() {} }; // ie console.log polyfill
 
@@ -18,11 +20,13 @@ mikeycell.loader = (function () {
   var that = this,
       numResourcesToLoad = 0,
       numResourcesLoaded = 0,
-      resourceList,
-      CARD_IMAGE_FOLDER = "cardimages/",
+      resourceListLg,
+      resourceListSm,
       CARD_IMAGE_SUFFIX = ".png",
-      CARD_IMAGE_WIDTH = 113,
-      CARD_IMAGE_HEIGHT = 157;
+      CARD_IMAGE_WIDTH_LG = 113,  // desktop cards
+      CARD_IMAGE_HEIGHT_LG = 157,
+      CARD_IMAGE_WIDTH_SM = 51,   // iPhone landscape-sized
+      CARD_IMAGE_HEIGHT_SM = 71,
       m = mikeycell;
       
   'use strict';
@@ -40,6 +44,9 @@ mikeycell.loader = (function () {
     }
   }
   
+  that.CARD_SIZE_LG = 1; // 113x157 cards
+  that.CARD_SIZE_SM = 2; // 51x71 cards
+  
   //// Resource loading ////
   
   // Allows files prefixed by "res!" to be loaded as resources
@@ -52,15 +59,17 @@ mikeycell.loader = (function () {
       });
    }  
    
-  // returns an array of card image resources
-  function listCardResources( that ) {
-    if (m.debug === m.DEBUGALL) { console.log('loader.listCardResources'); }
-    
-    // TODO Pass in a function, one for big images, one for small ones.
+  // returns an array of card image resources, either large or small
+  function listCardResources( that, size ) {
+    if (m.debug === m.DEBUGALL) { console.log('loader.listCardResources' + size); }
 
     // local function wraps card identifier with url and resource prefix
     var g = function ( cardRankPlusSuit ) {
-      return "res!cardimages/" + cardRankPlusSuit + ".png";
+      if (size && size === that.CARD_SIZE_SM) {
+        return "res!cardimages51x71/" + cardRankPlusSuit + ".png";
+      } else {
+         return "res!cardimages113x157/" + cardRankPlusSuit + ".png";
+      }
     }
 
     // array of resource urls returned to the loader
@@ -75,36 +84,49 @@ mikeycell.loader = (function () {
   // Contains 52 properties identified by rank and suit ('AD'), each containing a preloaded image element
   // Accessed using getCardImage( 'AD' )
   // Loaded by addCardImage( url )
-  that.CardImages = { };
+  that.CardImagesLg = { }; // 113x157
+  that.CardImagesSm = { }; // 51x71
   
-  // TODO add a smaller card images object
+  // Adds a preloaded image to CardImagesLg with the card's rank and suit as the property index
+  function addCardImageLg(url) {
+
+    var patternRegexLg = /(cardimages113x157\/)([\w]+)(.png)/, // regex with substrings for obtaining rank and suit
+        patternMatchLg = url.match(patternRegexLg), // creates an array item from the regex substrings
+        imgLg = new Image();
+        
+    imgLg.width = CARD_IMAGE_WIDTH_LG;
+    imgLg.height = CARD_IMAGE_HEIGHT_LG;
+    imgLg.src = url;
+    that.CardImagesLg[patternMatchLg[2]] = imgLg; // patternMatch[2] matches 'AD' in 'cardimages/AD.png'
+
+    if (m.debug === m.DEBUGALL) { console.log('loader.addCardImageLg: ' + patternMatchLg[2] + ' ' + imgLg.src); }
+  }
   
-  // Adds a preloaded image to the cardImages object with the card's rank and suit as the property index
-  function addCardImage(url) {
+  // Adds a preloaded image to CardImagesSm with the card's rank and suit as the property index.
+  // Same as above, less confusing this way...
+  function addCardImageSm(url) {
+                      // /(cardimages113x157\/)([\w]+)(.png)/
+    var patternRegexSm = /(cardimages51x71\/)([\w]+)(.png)/, // regex with substrings for obtaining rank and suit
+        patternMatchSm = url.match(patternRegexSm), // creates an array item from the regex substrings
+        imgSm = new Image();
+        
+    imgSm.width = CARD_IMAGE_WIDTH_SM;
+    imgSm.height = CARD_IMAGE_HEIGHT_SM;
+    imgSm.src = url;
+    that.CardImagesSm[patternMatchSm[2]] = imgSm; // patternMatch[2] matches 'AD' in 'cardimages/AD.png'
 
-    // TODO pass in a regex pattern? or a switch to select the one you want.
-    // then have a small set of images
-
-    var patternRegex = /(cardimages\/)([\w]+)(.png)/, // regex with substrings for obtaining rank and suit
-        patternMatch = url.match(patternRegex); // creates an array item from the regex substrings
-        img = new Image();
-    img.width = CARD_IMAGE_WIDTH;
-    img.height = CARD_IMAGE_HEIGHT;
-    img.src = url;
-    that.CardImages[patternMatch[2]] = img; // patternMatch[2] matches 'AD' in 'cardimages/AD.png'
-
-    if (m.debug === m.DEBUGALL) { console.log('loader.addCardImage: ' + patternMatch[2] + ' ' + img.src); }
+    if (m.debug === m.DEBUGALL) { console.log('loader.addCardImageLg: ' + patternMatchSm[2] + ' ' + imgSm.src); }
   }
   
   // Returns a preloaded Image element from the cardImages
-  function getCardImage ( cardRankPlusSuit ) {
-    if (m.debug === m.DEBUGALL) { console.log('loader.getCardImage: ' + cardRankPlusSuit + " " + that.CardImages[cardRankPlusSuit]); }
-
-    // TODO test viewport width here before returning the card
-    // that way you can return different sized cards for different sized screens
-    // also need to save differently sized cards
+  function getCardImage ( cardRankPlusSuit, size ) {
+    if (m.debug === m.DEBUGALL) { console.log('loader.getCardImage: ' + cardRankPlusSuit + ', ' + size ); }
     
-    return that.CardImages[cardRankPlusSuit];
+    if (size && size === that.CARD_SIZE_SM) {
+      return that.CardImagesSm[cardRankPlusSuit];
+    } else {
+      return that.CardImagesLg[cardRankPlusSuit];
+    }
   }
     
   //// Script loading ////
@@ -115,8 +137,9 @@ mikeycell.loader = (function () {
   
     // prepare list of card image resources to load, initialize counters
     setResourcePrefix( );
-    resourceList = listCardResources();
-    numResourcesToLoad = resourceList.length;
+    resourceListLg = listCardResources(that, that.CARD_SIZE_LG);
+    resourceListSm = listCardResources(that, that.CARD_SIZE_SM);
+    numResourcesToLoad = resourceListLg.length + resourceListSm.length;
     numResourcesLoaded = 0
 
     // Modernizr loads scripts and starts the app afterwards
@@ -126,6 +149,8 @@ mikeycell.loader = (function () {
         load: ['../../scripts/jquery-1.8.2.min.js', 
                'scripts/pattern.js',
                'scripts/logo.js',  
+               'scripts/storage.js',
+               'scripts/settings.js',
                'scripts/screens.js',
                'scripts/playingcards.js',
                'scripts/gamemodel.js',
@@ -133,8 +158,7 @@ mikeycell.loader = (function () {
                'scripts/gameloop.js',
                'scripts/playtouch.js',
                'scripts/audio.js',
-               'scripts/sounds.js',
-               'scripts/settings.js'], 
+               'scripts/sounds.js'], 
         complete: function () {
           // display splash screen at startup, defined in screens.js
           mikeycell.screens.start();
@@ -142,11 +166,19 @@ mikeycell.loader = (function () {
       },
       // card images
       {
-        load: resourceList,
+        load: resourceListLg,
         callback: function(url, result, key) {
           var pct = (numResourcesLoaded++ / numResourcesToLoad) * 100;
           mikeycell.screens.splashScreen.run(false, true, pct);
-          addCardImage(url);
+          addCardImageLg(url);
+        },
+      },
+      {
+        load: resourceListSm,
+        callback: function(url, result, key) {
+          var pct = (numResourcesLoaded++ / numResourcesToLoad) * 100;
+          mikeycell.screens.splashScreen.run(false, true, pct);
+          addCardImageSm(url);
         },
         complete: function() {
           numResourcesLoaded = numResourcesToLoad = 0;
@@ -159,7 +191,9 @@ mikeycell.loader = (function () {
   // Publicly available methods of mikeycell.loader
   return {
     run          : run,
-    getCardImage : getCardImage
+    getCardImage : getCardImage,
+    CARD_SIZE_LG : CARD_SIZE_LG,
+    CARD_SIZE_SM : CARD_SIZE_SM
   };
   
 })();
